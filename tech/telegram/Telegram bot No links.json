@@ -1,0 +1,376 @@
+{
+  "active": false,
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Ссылка?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ссылка?": {
+      "main": [
+        [
+          {
+            "node": "Это админ?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Кто админ?": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Удалить сообщение1": {
+      "main": [
+        [
+          {
+            "node": "Ссылки — нельзя",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Это админ?": {
+      "main": [
+        [
+          {
+            "node": "NoOp1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Удалить сообщение1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-18T04:59:02.673Z",
+  "id": "6",
+  "name": "Telegram bot No links",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "672f0529-0788-488f-bc9f-e5463b820f12",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -1620,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "edited_message",
+          "channel_post",
+          "edited_channel_post"
+        ],
+        "additionalFields": {}
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -1500,
+        720
+      ],
+      "webhookId": "69c08fdc-ead4-4949-8f75-37e960db33a4",
+      "typeVersion": 1,
+      "id": "e4f7736b-7faf-4ac2-b82a-6ba8adcba482",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        -960,
+        960
+      ],
+      "typeVersion": 1,
+      "id": "857a676e-432f-4019-9228-74e698a0f2f2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "https://"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "value2": "http://"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "Ссылка?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1240,
+        720
+      ],
+      "id": "18f561a8-206b-4518-b5e5-b3dbd35aa92f"
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "requestMethod": "POST",
+        "url": "https://api.telegram.org/bot1395184274:AAGhagvnXjgjmw4paMKTwiBZB3JQPus_wME/getChatAdministrators",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "chat_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "chat_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Кто админ?",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        -1320,
+        260
+      ],
+      "id": "f97e2a98-ca92-4bd7-9965-9dec5adbdcaf",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "9",
+          "name": "Query Auth Dobry Sosed"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "=result",
+        "options": {}
+      },
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        -1080,
+        280
+      ],
+      "id": "badc68b5-6134-4bc6-96b4-320a86a3dec6"
+    },
+    {
+      "parameters": {},
+      "name": "NoOp1",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        -780,
+        500
+      ],
+      "typeVersion": 1,
+      "id": "16944151-0fa6-4a37-aaa8-8b260cb20479"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}",
+        "text": "Пожалуйста, не размещайте ссылки на сторонние ресурсы в общем чате.\nЕсли вы хотите рассказать о своем проекте — свяжитесь с нашим Денисом @dulov ",
+        "additionalFields": {}
+      },
+      "name": "Ссылки — нельзя",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        700
+      ],
+      "notesInFlow": true,
+      "id": "20eb54f8-a3e9-46ed-a13f-516fa6bdb201",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      },
+      "notes": "Ссылка на записи"
+    },
+    {
+      "parameters": {
+        "operation": "deleteMessage",
+        "chatId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}",
+        "messageId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"message_id\"]}}"
+      },
+      "name": "Удалить сообщение1",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -820,
+        700
+      ],
+      "notesInFlow": true,
+      "id": "d3d8e6d5-c1ac-49b4-a384-144087bca4d8",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      },
+      "notes": "Ссылка на записи"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 649779472
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 36895840
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 309440240
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 368934950
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 122565211
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 174844854
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 1390878288
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 263706708
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 1307995728
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 179828041
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 983029076
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 296799675
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 436451811
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 427669133
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 478353020
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 680122856
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 215940143
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "Это админ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        600
+      ],
+      "id": "cfa21b1e-a33f-4ada-9baf-34b49f5841a4"
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-04-18T04:59:02.673Z",
+  "versionId": "c19eb6d9-12aa-400e-afaf-0da741a18061"
+}

@@ -1,0 +1,337 @@
+{
+  "name": "geo_country_2_postgre",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://wft-geo-db.p.rapidapi.com/v1/geo/countries",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "x-rapidapi-key",
+              "value": "1ad11e21a3msh6c7d4c9ec262bbdp111b02jsn5671af4f8598"
+            },
+            {
+              "name": "x-rapidapi-host",
+              "value": "wft-geo-db.p.rapidapi.com"
+            }
+          ]
+        }
+      },
+      "name": "geo/countries",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        260,
+        200
+      ],
+      "typeVersion": 1,
+      "id": "cb903bd7-c1f4-4394-838a-b8adc0796ee0"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "f3164b7b-9d8a-494d-abd1-5ddd488c5de7",
+      "name": "data split to array",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        680,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "countries",
+          "mode": "list",
+          "cachedResultName": "countries"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "code": "={{ $json.code }}",
+            "currency_codes": "={{ $json.currencyCodes.join() }}",
+            "name": "={{ $json.name }}",
+            "wiki_data_id": "={{ $json.wikiDataId }}"
+          },
+          "matchingColumns": [
+            "code"
+          ],
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "code",
+              "displayName": "code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "currency_codes",
+              "displayName": "currency_codes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "wiki_data_id",
+              "displayName": "wiki_data_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2f463317-cc3c-42fd-bb88-99525267312a",
+      "name": "Postgres1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        880,
+        420
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "nRTAeYModDTl0i6G",
+          "name": "Postgres_stribog_local"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "e902f226-0fd3-47a0-af12-460958e62078",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "links",
+        "options": {}
+      },
+      "id": "c6255138-2ec0-4b9a-bf26-41cf8bfa7e8f",
+      "name": "links split to array",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a591653e-6804-4622-9ea3-04e4b7baa840",
+              "leftValue": "={{ $json.rel }}",
+              "rightValue": "next",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6d54bda7-7d43-4f4b-bc5e-dba116df0fde",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -160,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://wft-geo-db.p.rapidapi.com' + $json.href }}",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "x-rapidapi-key",
+              "value": "1ad11e21a3msh6c7d4c9ec262bbdp111b02jsn5671af4f8598"
+            },
+            {
+              "name": "x-rapidapi-host",
+              "value": "wft-geo-db.p.rapidapi.com"
+            }
+          ]
+        }
+      },
+      "name": "geo/countries next",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        280,
+        440
+      ],
+      "typeVersion": 1,
+      "id": "bcdb3eb7-9c42-4150-83d0-859a616b312a"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "id": "af140b79-5f28-4b10-a860-b142baaa1b56",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        60,
+        400
+      ],
+      "webhookId": "96df8d3b-c538-4584-ac39-97b0f0dd8620"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "geo/countries": {
+      "main": [
+        [
+          {
+            "node": "data split to array",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "links split to array",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "data split to array": {
+      "main": [
+        [
+          {
+            "node": "Postgres1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "geo/countries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "links split to array": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "geo/countries next": {
+      "main": [
+        [
+          {
+            "node": "data split to array",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "links split to array",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "geo/countries next",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "644c71e8-6b51-4d14-93f1-7ed2ab204171",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b6a84f8abad5aa824289ebfba28e6c6b6aa3955804ead66b307169a095f0fa13"
+  },
+  "id": "BRszWrathprOieb8",
+  "tags": []
+}

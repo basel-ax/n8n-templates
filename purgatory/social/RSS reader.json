@@ -1,0 +1,530 @@
+{
+  "active": false,
+  "connections": {
+    "IF-1": {
+      "main": [
+        [
+          {
+            "node": "Telegram_M365",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF-2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF-2": {
+      "main": [
+        [
+          {
+            "node": "Telegram_Security",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram_IT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Feed Read": {
+      "main": [
+        [
+          {
+            "node": "if_date",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches": {
+      "main": [
+        [
+          {
+            "node": "RSS Feed Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "RSS Source",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "only get new RSS": {
+      "main": [
+        [
+          {
+            "node": "Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Source": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data": {
+      "main": [
+        [
+          {
+            "node": "my_prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "my_prompt": {
+      "main": [
+        [
+          {
+            "node": "Generate Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_date": {
+      "main": [
+        [
+          {
+            "node": "if_text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_text": {
+      "main": [
+        []
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-16T03:28:58.511Z",
+  "id": "1",
+  "name": "RSS reader",
+  "nodes": [
+    {
+      "parameters": {
+        "chatId": "TelegramID",
+        "text": "={{$json[\"title\"]}}\n{{$json[\"link\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Telegram_IT",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1540,
+        1260
+      ],
+      "typeVersion": 1,
+      "id": "641268de-66de-47be-8bc9-53ddf63ccd3c",
+      "credentials": {
+        "telegramApi": {
+          "id": "2",
+          "name": "IT_RSS"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "TelegramID",
+        "text": "={{$json[\"title\"]}}\n{{$json[\"link\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Telegram_Security",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1540,
+        1020
+      ],
+      "typeVersion": 1,
+      "id": "5a2cd420-bcaf-4350-90d0-a081c730f71f",
+      "credentials": {
+        "telegramApi": {
+          "id": "4",
+          "name": "Security_RSS"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "TelegramID",
+        "text": "={{$json[\"title\"]}}\n{{$json[\"link\"]}}",
+        "additionalFields": {}
+      },
+      "name": "Telegram_M365",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1540,
+        760
+      ],
+      "typeVersion": 1,
+      "id": "b4c3ff24-bbf3-4cde-bdf2-882aa7a021b6",
+      "credentials": {
+        "telegramApi": {
+          "id": "5",
+          "name": "M365_RSS"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"title\"]}}",
+              "operation": "regex",
+              "value2": "資安|資訊安全|安全|外洩|監控|威脅|漏洞|封鎖|修補|攻擊|入侵|個資|隱私|私密|騙|社交工程|釣魚|駭|Security|security|Secure|secure"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "IF-2",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1200,
+        1040
+      ],
+      "typeVersion": 1,
+      "id": "0bb29bc7-91fa-4007-aaa8-ca0b4e52c6c6"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"link\"]}}",
+              "operation": "contains",
+              "value2": "techcommunity.microsoft.com"
+            }
+          ]
+        }
+      },
+      "name": "IF-1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1360,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "12be2b7e-2074-46a7-b4ce-9014b60e7f88"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "prompt": {
+          "messages": [
+            {
+              "content": "=Привет! Представь что ты — редактор русскоязычного Телеграмм-канала «Нейрония Судьбы» об искусственном интеллекте и чудесах технологий. Прочти заголовок и описание новости и определи, подходит ли эта новость для публикации в канал. Напиши «нет» если контент не подходящий или кажется неинтересным. Напиши короткое резюме новости на русском языке если новость подходящая и интересная.\n\nЗаголовок новости:\n{{ $json[\"title\"] }}\nТекст новости:{{ $json[\"contentSnippet\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b6e08ad3-a4b1-4b43-ae53-559f47c3b605",
+      "name": "OpenAI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        420
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "2",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/engines/text-davinci-003/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "adb5082d-41f8-40b5-b2df-0c662035f3b3",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        1180,
+        360
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "5",
+          "name": "OpenAI HTTP key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"SplitInBatches\"].json[\"url\"]}}"
+      },
+      "name": "RSS Feed Read",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        -360,
+        600
+      ],
+      "typeVersion": 1,
+      "id": "af54093c-f193-4bc7-bc88-74f5133628f9"
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        -640,
+        600
+      ],
+      "typeVersion": 1,
+      "id": "b7ffe179-c2ab-4dfc-aa95-b4502906cd6b"
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 10,
+              "unit": "minutes"
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        -1080,
+        600
+      ],
+      "typeVersion": 1,
+      "id": "5abae119-19be-4449-ba3c-dceea78fb60b"
+    },
+    {
+      "parameters": {
+        "functionCode": "const staticData = getWorkflowStaticData('global');\nconst newRSSIds = items.map(item => item.json[\"isoDate\"]);\nconst oldRSSIds = staticData.oldRSSIds; \n\nif (!oldRSSIds) {\n  staticData.oldRSSIds = newRSSIds;\n  return items;\n}\n\n\nconst actualNewRSSIds = newRSSIds.filter((id) => !oldRSSIds.includes(id));\nconst actualNewRSS = items.filter((data) => actualNewRSSIds.includes(data.json['isoDate']));\nstaticData.oldRSSIds = [...actualNewRSSIds, ...oldRSSIds];\n\nreturn actualNewRSS;\n"
+      },
+      "name": "only get new RSS",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        340,
+        600
+      ],
+      "typeVersion": 1,
+      "id": "c81295bb-9d71-4cdc-84ca-2aeea7616f6f"
+    },
+    {
+      "parameters": {
+        "functionCode": "return [\n  {\n      url: 'https://machinelearning.apple.com/rss.xml',\n  },\n  {\n      url: 'http://googleaiblog.blogspot.com/atom.xml',\n  },\n  {\n      url: 'http://feeds.ign.com/ign/all',\n  },\n  {\n      url: 'http://feeds.feedburner.com/kdnuggets-data-mining-analytics',\n  },\n  {\n      url: 'https://kotaku.com/rss',\n  }\n];"
+      },
+      "name": "RSS Source",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        -860,
+        600
+      ],
+      "typeVersion": 1,
+      "id": "8a58cfaf-19a3-436c-9c56-d0fbd8a3491b"
+    },
+    {
+      "parameters": {},
+      "id": "a56178ce-81a7-4759-bfd0-268234df060a",
+      "name": "Data",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        540,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "0ef53308-d33e-4198-9fbd-af50cf68dbf9",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        820
+      ],
+      "webhookId": "347a498b-2a6e-4d28-b14c-3f45197c3131"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(\n  e => ({ content: e.json.content })\n);"
+      },
+      "id": "9691c847-1472-4571-b501-6bbfc5cfc8bf",
+      "name": "my_prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        760,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({\n  model: \"gpt-3.5-turbo-0301\", \n  messages: [ \n    { role: \"user\", content: \"Действуй как редактор русскоязычного Телеграмм-канала «Нейрония Судьбы» об искусственном интеллекте и чудесах технологий. Прочти заголовок и описание новости и определи, подходит ли эта новость для публикации в канал. Напиши «нет» если контент не подходящий или кажется неинтересным. Напиши короткое резюме новости на русском языке если новость подходящая и интересная.\" },\n    { role: \"assistant\", content: \"Хорошо, я буду действовать согласно этим правилам.\" },\n    { role: \"user\", content: $json.content } ], \n  max_tokens: 2000, \n  temperature: 0.5\n  })\n}}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 3000
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 80000
+        }
+      },
+      "id": "fa51d913-613c-45a4-be2c-624160eef9a9",
+      "name": "Generate Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        980,
+        600
+      ],
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 3,
+      "credentials": {
+        "openAiApi": {
+          "id": "2",
+          "name": "OpenAi account"
+        }
+      },
+      "disabled": true,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "dateTime": [
+            {
+              "value1": "={{ $json.isoDate }}",
+              "value2": "={{ $now.minus({days:10}).startOf('day').toISO() }}"
+            }
+          ]
+        }
+      },
+      "id": "0f602b5c-acb1-47a6-8d84-015e9078ce0b",
+      "name": "if_date",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.content }}",
+              "operation": "contains",
+              "value2": "Contributors"
+            }
+          ]
+        }
+      },
+      "id": "b7464210-8ca8-49e3-9901-730bbae2c5c3",
+      "name": "if_text",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        100,
+        600
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-05-05T10:51:04.000Z",
+  "versionId": "d5cae398-d24f-4822-9b3f-5892feae062c"
+}

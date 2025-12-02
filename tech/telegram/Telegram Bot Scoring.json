@@ -1,0 +1,171 @@
+{
+  "active": false,
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL": {
+      "main": [
+        [
+          {
+            "node": "MySQL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-18T04:58:36.714Z",
+  "id": "5",
+  "name": "Telegram Bot Scoring",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "318e6a99-a982-4c2f-ac0f-c6681af24214",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "edited_message"
+        ],
+        "additionalFields": {}
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -1280,
+        480
+      ],
+      "webhookId": "5f1a3c22-3979-40e0-b376-97d70954c9c7",
+      "typeVersion": 1,
+      "id": "26d32b6d-5ef2-4e9f-b1be-f4ad81f5fd15",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "tg_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}"
+            }
+          ],
+          "string": [
+            {
+              "name": "tg_username",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"username\"]}}"
+            },
+            {
+              "name": "name",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"first_name\"]}}"
+            },
+            {
+              "name": "surname",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"last_name\"]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}"
+            },
+            {
+              "name": "msg_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"message_id\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -1060,
+        480
+      ],
+      "notesInFlow": true,
+      "id": "da1be32f-4b57-4e20-b598-38155a6a6fbe",
+      "notes": "Значения переменных"
+    },
+    {
+      "parameters": {
+        "table": "telegram_all_msgs",
+        "columns": "tg_id, tg_username, name, surname, text, msg_id",
+        "options": {}
+      },
+      "name": "MySQL",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        480
+      ],
+      "id": "7b308a2f-e696-424d-bc2f-a1b92f14e687",
+      "credentials": {
+        "mySql": {
+          "id": "2",
+          "name": "MySQL u1115007"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=update telegram_all_msgs\nset score = CASE\nwhen LENGTH(text) > 40 and text LIKE \"%#отзыв%\" then 10\nwhen text LIKE \"%#яблоко%\" then 10\nwhen LENGTH(text) > 100 and text LIKE \"%#конспект%\" then 8\nwhen LENGTH(text) > 300 then 5\nwhen LENGTH(text) > 40 and text LIKE \"%#qa%\" then 5\nwhen LENGTH(text) > 50 and text LIKE \"%#конспект%\" then 4\nwhen text LIKE \"%пасибо%\" or text LIKE \"%лагодарю%\" or text LIKE \"%ожалуйста%\" then 4\nELSE 2\nEND\nWHERE tg_id={{$node[\"Set\"].json[\"tg_id\"]}} and msg_id={{$node[\"Set\"].json[\"msg_id\"]}}"
+      },
+      "name": "MySQL1",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        480
+      ],
+      "id": "5f651fd7-1614-49e7-b187-aad1d10b6129",
+      "credentials": {
+        "mySql": {
+          "id": "2",
+          "name": "MySQL u1115007"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-04-18T04:58:36.714Z",
+  "versionId": "c31f7d3d-d0b9-4030-bfa6-3c2ce0cb5c3f"
+}

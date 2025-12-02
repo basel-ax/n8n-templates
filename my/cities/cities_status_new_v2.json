@@ -1,0 +1,1376 @@
+{
+  "name": "cities_status_new",
+  "nodes": [
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "7acc3866-f5f8-4622-ba05-a9e17f0ac969",
+      "name": "data split to array",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        840,
+        340
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "4e679105-669b-4d14-8763-1b4602216d56",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -740,
+        -340
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "links",
+        "options": {}
+      },
+      "id": "c2b8fefd-39ea-4090-83a0-b889d5c0481a",
+      "name": "links split to array",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a591653e-6804-4622-9ea3-04e4b7baa840",
+              "leftValue": "={{ $json.rel }}",
+              "rightValue": "next",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b2648c8e-a124-46be-af5e-5384d6349d78",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        60,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 1.5
+      },
+      "id": "23a12105-1719-41fd-a096-610ae058ffa2",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        280,
+        400
+      ],
+      "webhookId": "b9286ceb-a6a4-4c03-845d-31dcb91de05a"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "countries",
+          "mode": "list",
+          "cachedResultName": "countries"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "status",
+              "value": "New"
+            }
+          ]
+        },
+        "sort": {
+          "values": [
+            {
+              "column": "name"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "952abb12-7e76-49b1-9b45-aa932995c3ea",
+      "name": "Get 1 New country",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -200,
+        -20
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "nRTAeYModDTl0i6G",
+          "name": "Postgres_stribog_local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://wft-geo-db.p.rapidapi.com/v1/geo/cities",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "x-rapidapi-key",
+              "value": "1ad11e21a3msh6c7d4c9ec262bbdp111b02jsn5671af4f8598"
+            },
+            {
+              "name": "x-rapidapi-host",
+              "value": "wft-geo-db.p.rapidapi.com"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "countryIds",
+              "value": "={{ $json.wiki_data_id }}"
+            },
+            {
+              "name": "limit",
+              "value": "10"
+            }
+          ]
+        }
+      },
+      "name": "geo/cities",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        260,
+        100
+      ],
+      "typeVersion": 1,
+      "id": "ca22e7c4-5d40-422c-a778-d6897bf7306b"
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://wft-geo-db.p.rapidapi.com' + $json.href }}",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "x-rapidapi-key",
+              "value": "1ad11e21a3msh6c7d4c9ec262bbdp111b02jsn5671af4f8598"
+            },
+            {
+              "name": "x-rapidapi-host",
+              "value": "wft-geo-db.p.rapidapi.com"
+            }
+          ]
+        }
+      },
+      "name": "geo/cities next",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        500,
+        440
+      ],
+      "typeVersion": 1,
+      "id": "dd5df3c0-4c97-46a2-bc3e-b416bd06b5b6"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cities",
+          "mode": "list",
+          "cachedResultName": "cities"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "region_code": "={{ $json.regionCode }}",
+            "latitude": "={{ $json.latitude }}",
+            "longitude": "={{ $json.longitude }}",
+            "wiki_data_id": "={{ $json.wikiDataId }}",
+            "city_type": "={{ $json.type }}",
+            "name": "={{ $json.name }}",
+            "country": "={{ $json.country }}",
+            "country_code": "={{ $json.countryCode }}",
+            "region": "={{ $json.region }}",
+            "region_wd_id": "={{ $json.regionWdId }}",
+            "population": "={{ $json.population }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "wiki_data_id",
+              "displayName": "wiki_data_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "city_type",
+              "displayName": "city_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "country_code",
+              "displayName": "country_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "region",
+              "displayName": "region",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "region_code",
+              "displayName": "region_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "latitude",
+              "displayName": "latitude",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "longitude",
+              "displayName": "longitude",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "region_wd_id",
+              "displayName": "region_wd_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "population",
+              "displayName": "population",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e45069f1-4151-49da-a410-f396663230aa",
+      "name": "Upsert city",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1040,
+        340
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "nRTAeYModDTl0i6G",
+          "name": "Postgres_stribog_local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "countries",
+          "mode": "list",
+          "cachedResultName": "countries"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "Processed",
+            "code": "={{ $json.code }}"
+          },
+          "matchingColumns": [
+            "code"
+          ],
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "code",
+              "displayName": "code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "currency_codes",
+              "displayName": "currency_codes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "wiki_data_id",
+              "displayName": "wiki_data_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a866b556-c6ca-42f7-b637-43f07d7b5b65",
+      "name": "Country status Processed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1040,
+        -20
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "nRTAeYModDTl0i6G",
+          "name": "Postgres_stribog_local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://www.wikidata.org/w/rest.php/wikibase/v0/entities/items/' + $json.wiki_data_id }}",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJhMDNjYjJlOWI3ZTkwNmNkY2VmNTgwYWFiMGIwOThjZiIsImp0aSI6IjUwM2Q2M2ZlNDhjZWE4MzY3MzYzM2I1NjE2ZGQ4NDMyZjYzMjQ3OTYxYTA5OThmNzRhODRmMmNhNzdmZGVhNDVmNDNkMGYyMzA5NGE5NWNkIiwiaWF0IjoxNzMxOTQwODExLjIxNzI1NCwibmJmIjoxNzMxOTQwODExLjIxNzI1OCwiZXhwIjozMzI4ODg0OTYxMS4yMTUzMSwic3ViIjoiNzY5NzkzMTYiLCJpc3MiOiJodHRwczovL21ldGEud2lraW1lZGlhLm9yZyIsInJhdGVsaW1pdCI6eyJyZXF1ZXN0c19wZXJfdW5pdCI6NTAwMCwidW5pdCI6IkhPVVIifSwic2NvcGVzIjpbImJhc2ljIl19.UudoW9OcUDCVDQqydxdq4qf6Mgvgu-GRjJRky9ReYyE7Ryo7Bfd0xy4FcQQt7Kdn74RNg5aMnGdFTCYaDjnrOlcTJeOy4Z7_pHqAbe0nIVh6XFZaZM85oDbGIL57DL4JjFj4tey8ewsPna7LHEP_I6igkBnTVxOoDLSSbKjZwHBfYXBV3s1AZyU5lzoX7ovXjt068YvoqFjHAoEtY86myfHr076ZEILKPX_xEi1kOKcwfRs4hW5ZO1UQJVAzE-_oLW7uo8aH08ysOEZf8icIA9wcTR9U20mW_7nl3wklOD-FX0PQKFw9CsdiLsFYZs3dt5knEKEaSWgtrdiesW-KK4TkuAcbpLUTBFebiYHCxfCRyyo595jg-jyy9TCBELejzg4o-_-OTPJ_thG69nfR-l8-hUZoegKWz58VGQrcBXKtA9Q5RVCEUNyt7bUVSc8YEAxUyzO28qgLeOI7OeoqxtHPGGTXgjJyI-Y_fMF2dCkQzDYNZah5-ph89fE1jVMiBgA8d-k5xitFTR-ANNQJOOy6RiMx9eVdX3i8XJCmzmAlzlUcg-q-BoSH3vrN4ky1GLaVk5G6hgrdu0FBDGBHKftFT7cRbGqakUgZe4ppnAKP2rEcWnMCssChZsnirbs1njuA8SaO_N1lA8zGAXdnEk17zECxrvwFgamZhxXH_OI"
+            }
+          ]
+        }
+      },
+      "name": "City Wikidata",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        40,
+        -840
+      ],
+      "typeVersion": 1,
+      "id": "b81b06c9-22cd-4239-a65e-a6eaa3e1d825"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cities",
+          "mode": "list",
+          "cachedResultName": "cities"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "status",
+              "value": "New"
+            },
+            {
+              "column": "population",
+              "condition": ">",
+              "value": "10000"
+            }
+          ]
+        },
+        "sort": {
+          "values": [
+            {
+              "column": "name"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ce7f4738-98da-40d4-84a2-5f35e5316bf8",
+      "name": "Get 1 New city",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -180,
+        -620
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "nRTAeYModDTl0i6G",
+          "name": "Postgres_stribog_local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cities",
+          "mode": "list",
+          "cachedResultName": "cities"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "status": "Processed"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "wiki_data_id",
+              "displayName": "wiki_data_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "city_type",
+              "displayName": "city_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "country_code",
+              "displayName": "country_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "region",
+              "displayName": "region",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "region_code",
+              "displayName": "region_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "latitude",
+              "displayName": "latitude",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "longitude",
+              "displayName": "longitude",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "region_wd_id",
+              "displayName": "region_wd_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "population",
+              "displayName": "population",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6bbeccf1-b38d-44a1-acb0-863007e81987",
+      "name": "City status Processed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1060,
+        -620
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "nRTAeYModDTl0i6G",
+          "name": "Postgres_stribog_local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cities",
+          "mode": "list",
+          "cachedResultName": "cities"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get 1 New city').item.json.id }}",
+            "enwiki": "={{ $json.sitelinks.enwiki }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "wiki_data_id",
+              "displayName": "wiki_data_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "city_type",
+              "displayName": "city_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "country_code",
+              "displayName": "country_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "region",
+              "displayName": "region",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "region_code",
+              "displayName": "region_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "latitude",
+              "displayName": "latitude",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "longitude",
+              "displayName": "longitude",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "region_wd_id",
+              "displayName": "region_wd_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "population",
+              "displayName": "population",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "enwiki",
+              "displayName": "enwiki",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "352b6347-ffdd-4181-9659-362dc73fd937",
+      "name": "City Enwiki",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1060,
+        -800
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "nRTAeYModDTl0i6G",
+          "name": "Postgres_stribog_local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "51854c5b-ac1f-43ff-a5fa-667eac3a877f",
+              "leftValue": "={{ $json.sitelinks.enwiki }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5ddaa569-31a1-402f-ab16-a83655080365",
+      "name": "If sitelinks.enwiki",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        260,
+        -780
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "77e76ba4-ec0a-4164-8a83-56903adbf94c",
+              "leftValue": "={{ $json.descriptions.en }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "03a6cea6-66f2-4bd1-9536-9410bfcbdb81",
+      "name": "If descriptions.en",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        260,
+        -940
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "cities",
+          "mode": "list",
+          "cachedResultName": "cities"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get 1 New city').item.json.id }}",
+            "endesc": "={{ $json.descriptions.en }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "wiki_data_id",
+              "displayName": "wiki_data_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "city_type",
+              "displayName": "city_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "country_code",
+              "displayName": "country_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "region",
+              "displayName": "region",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "region_code",
+              "displayName": "region_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "latitude",
+              "displayName": "latitude",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "longitude",
+              "displayName": "longitude",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "region_wd_id",
+              "displayName": "region_wd_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "population",
+              "displayName": "population",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "enwiki",
+              "displayName": "enwiki",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "endesc",
+              "displayName": "endesc",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f7d03e8c-df2d-4a34-b23a-22be2d5ce6d1",
+      "name": "City Endesc",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1060,
+        -960
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "nRTAeYModDTl0i6G",
+          "name": "Postgres_stribog_local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 1.5
+      },
+      "id": "857eff9d-5d82-4baa-9643-973c9d632370",
+      "name": "Wait1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        460,
+        -420
+      ],
+      "webhookId": "b9286ceb-a6a4-4c03-845d-31dcb91de05a"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "data split to array": {
+      "main": [
+        [
+          {
+            "node": "Upsert city",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get 1 New country",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get 1 New city",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "links split to array": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "geo/cities next",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get 1 New country": {
+      "main": [
+        [
+          {
+            "node": "geo/cities",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Country status Processed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "geo/cities": {
+      "main": [
+        [
+          {
+            "node": "data split to array",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "links split to array",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "geo/cities next": {
+      "main": [
+        [
+          {
+            "node": "data split to array",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "links split to array",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get 1 New city": {
+      "main": [
+        [
+          {
+            "node": "City Wikidata",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "City status Processed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "City Wikidata": {
+      "main": [
+        [
+          {
+            "node": "If sitelinks.enwiki",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If descriptions.en",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If sitelinks.enwiki": {
+      "main": [
+        [
+          {
+            "node": "City Enwiki",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If descriptions.en": {
+      "main": [
+        [
+          {
+            "node": "City Endesc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "City status Processed": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Get 1 New city",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5d32c139-8444-45a3-88da-7d37778a5bdb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b6a84f8abad5aa824289ebfba28e6c6b6aa3955804ead66b307169a095f0fa13"
+  },
+  "id": "zG4eredZILrc6YP4",
+  "tags": [
+    {
+      "createdAt": "2024-11-18T07:28:04.133Z",
+      "updatedAt": "2024-11-18T07:28:04.133Z",
+      "id": "E6CTqpPKbo7A45pR",
+      "name": "cities"
+    }
+  ]
+}

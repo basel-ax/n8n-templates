@@ -1,0 +1,424 @@
+{
+  "name": "chakramtest",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "7c36f9cd-e5a0-4cad-8638-719898274f17",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -1680,
+        100
+      ],
+      "webhookId": "51942fbb-ca0e-4ec4-9423-5fcc7d3c4281",
+      "typeVersion": 1,
+      "credentials": {
+        "telegramApi": {
+          "id": "gRFnHIttMdxkiFp0",
+          "name": "chakramtest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.message?.text }}",
+        "rules": {
+          "rules": [
+            {
+              "operation": "notStartsWith",
+              "value2": "/"
+            },
+            {
+              "operation": "startsWith",
+              "value2": "/start",
+              "output": 1
+            },
+            {
+              "operation": "startsWith",
+              "value2": "=/image ",
+              "output": 2
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "id": "1c055b9d-d0e5-404b-bc56-bff707e29147",
+      "name": "CheckCommand",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -880,
+        80
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Error fallback for unsupported commands",
+        "height": 231.22373949579838,
+        "width": 316.1071428571428
+      },
+      "id": "113b8cb7-ab37-4572-8262-5ca7f562558a",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -460,
+        780
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "model_temperature",
+              "value": 0.8
+            },
+            {
+              "name": "token_length",
+              "value": 500
+            }
+          ],
+          "string": [
+            {
+              "name": "system_command",
+              "value": "=You are a friendly chatbot. User name is {{ $json?.message?.from?.first_name }}. User system language is {{ $json?.message?.from?.language_code }}. First, detect user text language. Next, provide your reply in the same language. Include several suitable emojis in your answer."
+            },
+            {
+              "name": "bot_typing",
+              "value": "={{ $json?.message?.text.startsWith('/image') ? \"upload_photo\" : \"typing\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "41d87a6a-6ef8-417d-ba31-cb019c3689d7",
+      "name": "Settings",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1620,
+        820
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "content": "## Chatbot mode by default\n### (when no command is provided)",
+        "height": 293,
+        "width": 331
+      },
+      "id": "8cace13d-7b0c-48d8-8b87-274ea10a38a8",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        -480
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Welcome message\n### /start",
+        "height": 280,
+        "width": 331
+      },
+      "id": "55e4361c-b19a-4374-8e31-cb6e8d53fcc0",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        -140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.message.from.id }}",
+        "text": "=START. Privet, ya chat bot",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "b89fab64-c896-423d-a87c-0daff4943627",
+      "name": "Text reply",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -360,
+        -40
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "telegramApi": {
+          "id": "gRFnHIttMdxkiFp0",
+          "name": "chakramtest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $json.message.from.id }}",
+        "action": "={{ $json.bot_typing }}"
+      },
+      "id": "ad4e7df6-261f-4494-b02d-e5c5e8279577",
+      "name": "Send Typing action",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -1400,
+        900
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "telegramApi": {
+          "id": "gRFnHIttMdxkiFp0",
+          "name": "chakramtest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "id": "39cf02a2-c157-4e64-ae34-b0f900f12c36",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        -1180,
+        840
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "content": "## Create an image\n### /image + request",
+        "height": 314,
+        "width": 310
+      },
+      "id": "cc8d8aa5-697f-4008-b691-f2e63b49c6a5",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -440,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.from.id }}",
+        "text": "=Sorry, {{ $json.message.from.first_name }}! This command is not supported yet. Please type some text to a chat bot or try this command:\n/image \\[your prompt]\n\nEnter the command, then space and provide your request. Example:\n\n`/image a picture or a cute little kitten with big eyes. Miyazaki studio ghibli style`",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "6f122c75-1b7d-4c94-b9f9-96cea14f1674",
+      "name": "Send error message",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -360,
+        860
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "telegramApi": {
+          "id": "gRFnHIttMdxkiFp0",
+          "name": "chakramtest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "message.text",
+              "value": "={{ $json?.message?.text || \"\" }}"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": true
+        }
+      },
+      "id": "9a8a9602-38e7-4506-b511-85a66812f0b2",
+      "name": "PreProcessing",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1500,
+        100
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "content": "## Неиспользуемый кусок\n**из telegram-ai-chatbot**\nБыл между PreProccessing & checkCommand",
+        "height": 420,
+        "width": 820
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1760,
+        680
+      ],
+      "id": "d3dd360e-f4e0-42da-b3eb-cfd41965a161",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.message.from.id }}",
+        "text": "=OTHER. Privet, ya chat bot",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "150cc602-f964-412c-99d9-6f99add35dcc",
+      "name": "Text reply1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -380,
+        -360
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "telegramApi": {
+          "id": "gRFnHIttMdxkiFp0",
+          "name": "chakramtest"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Settings').first().json.message.from.id }}",
+        "text": "Test /image command",
+        "additionalFields": {}
+      },
+      "id": "3df723bd-1a61-4b8d-96cb-dd7b2e504a31",
+      "name": "Send text",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -360,
+        440
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "telegramApi": {
+          "id": "gRFnHIttMdxkiFp0",
+          "name": "chakramtest"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge": {
+      "main": [
+        []
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "Send Typing action",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CheckCommand": {
+      "main": [
+        [
+          {
+            "node": "Text reply1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send error message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PreProcessing": {
+      "main": [
+        [
+          {
+            "node": "CheckCommand",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "PreProcessing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Typing action": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ed8f9c36-22f3-4201-8e1a-363bae0ae980",
+  "meta": {
+    "instanceId": "5b403b94c65c5eabfb1b862df43485e7a2730eeaf30315fe882e9dd5dfaca3d1"
+  },
+  "id": "4YKwxe6dImicplUp",
+  "tags": [
+    {
+      "createdAt": "2025-01-19T07:17:11.553Z",
+      "updatedAt": "2025-01-19T07:17:11.553Z",
+      "id": "Avtf3Znds56VGS5O",
+      "name": "mailun"
+    }
+  ]
+}

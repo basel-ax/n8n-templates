@@ -1,0 +1,604 @@
+{
+  "name": "quotes2article",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        60
+      ],
+      "id": "27c448f0-2ca8-4d1a-865a-306d39dd10dd",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "command": "=export GOROOT=/usr/local/go && export GOPATH=$HOME/go && export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH && echo \"{{ $('quotes_Select_New_limit1').item.json.Text }}\" | fabric --pattern mailun_create_quote_art_prompt "
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        60
+      ],
+      "id": "e25e6c9e-d694-4c99-9bb4-c09c543fc984",
+      "name": "create_quote_art_prompt"
+    },
+    {
+      "parameters": {
+        "content": "## Source to Article\n- Выбираю данные из Baserow. \n- У записи в Baserow меняю статус на Article\n- Создаю запись в таблице Article в БД Postgre ",
+        "height": 600,
+        "width": 580,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        600,
+        -120
+      ],
+      "id": "b5947f58-d2f8-4126-b3d0-9f8d9846e49d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "databaseId": 167158,
+        "tableId": 415392,
+        "rowId": "={{ $json.id }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 3181383,
+              "fieldValue": "={{ $('Set vars').item.json.BaserowStatus }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        720,
+        300
+      ],
+      "id": "09ed330d-4eec-4e07-9842-bcd667f6275f",
+      "name": "quotes_update_Status",
+      "credentials": {
+        "baserowApi": {
+          "id": "6YyQy1vbry2396WG",
+          "name": "mailun"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "databaseId": 167158,
+        "tableId": 415392,
+        "limit": 1,
+        "additionalOptions": {
+          "filters": {
+            "fields": [
+              {
+                "field": 3181383,
+                "value": "New"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        720,
+        60
+      ],
+      "id": "3dc30877-507c-4191-8a43-735691ba3bca",
+      "name": "quotes_Select_New_limit1",
+      "credentials": {
+        "baserowApi": {
+          "id": "6YyQy1vbry2396WG",
+          "name": "mailun"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Create new Image in Postgre\n- take ID from Article. \n- generate prompt, based on quote, by fabric\n- Создаю запись в таблице Image в БД Postgre",
+        "height": 380,
+        "width": 580,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        -120
+      ],
+      "id": "fccacac1-ec05-4023-92cd-22fcf76413c9",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Before start\n```bash\nollama run llama3.1\n```",
+        "height": 120,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -120
+      ],
+      "id": "2c4fd52f-34a8-4aaf-817b-3387a551a535",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "articles",
+          "mode": "list",
+          "cachedResultName": "articles"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "title": "= Baserow quote {{ $json.id }}",
+            "body": "={{ $json.Text }}\n\n{{ $json.Source }}\n\n{{ $json.Author }}",
+            "status": "={{ $('Set vars').item.json.ArticleStatus }}",
+            "project_id": "={{ $('Set vars').item.json.projectId }}",
+            "source": "Baserow",
+            "source_id": "={{ $json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "slug",
+              "displayName": "slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "short_description",
+              "displayName": "short_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "body",
+              "displayName": "body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rewrite_notes",
+              "displayName": "rewrite_notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "telegram_message_id",
+              "displayName": "telegram_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "schedule_date",
+              "displayName": "schedule_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "source_id",
+              "displayName": "source_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1020,
+        60
+      ],
+      "id": "f2e48321-7a75-4741-8fe3-99f4aa0d6d3c",
+      "name": "NewArticle",
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Set vars\n- set ProjectId\n- set ImageStatus\n- set ArticleStatus",
+        "height": 380,
+        "width": 220,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        280,
+        -120
+      ],
+      "id": "5af1e81c-6b48-4003-9d63-d9811d2d03a7",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "images",
+          "mode": "list",
+          "cachedResultName": "images"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "article_id": "={{ $('NewArticle').item.json.id }}",
+            "status": "={{ $('Set vars').item.json.ImageStatus }}",
+            "prompt": "={{ $json.stdout }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "alt_title",
+              "displayName": "alt_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "slug",
+              "displayName": "slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sort",
+              "displayName": "sort",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rewrite_notes",
+              "displayName": "rewrite_notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "article_id",
+              "displayName": "article_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "base64",
+              "displayName": "base64",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "path",
+              "displayName": "path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1600,
+        60
+      ],
+      "id": "6c4723cb-1fbb-4300-bbf1-9ea5a427bf4f",
+      "name": "NewImage",
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "27faeea4-5a95-4487-84eb-00138b8b620f",
+              "name": "projectId",
+              "value": 2,
+              "type": "number"
+            },
+            {
+              "id": "ba4ef26b-75a1-4625-b75c-88b8f3263d21",
+              "name": "ImageStatus",
+              "value": "ReadyToGenerate",
+              "type": "string"
+            },
+            {
+              "id": "d51501b7-8517-490b-8c0e-783cf415845f",
+              "name": "ArticleStatus",
+              "value": "GenerateImages",
+              "type": "string"
+            },
+            {
+              "id": "36d562db-3409-48bd-a676-2e89bdff367b",
+              "name": "BaserowStatus",
+              "value": "Article",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        340,
+        60
+      ],
+      "id": "fa2037af-af99-413f-9b8b-5e31c50268a0",
+      "name": "Set vars"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set vars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_quote_art_prompt": {
+      "main": [
+        [
+          {
+            "node": "NewImage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "quotes_Select_New_limit1": {
+      "main": [
+        [
+          {
+            "node": "quotes_update_Status",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "NewArticle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NewArticle": {
+      "main": [
+        [
+          {
+            "node": "create_quote_art_prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set vars": {
+      "main": [
+        [
+          {
+            "node": "quotes_Select_New_limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fb47e3dd-cded-4fc0-8c64-1acfda1c07ad",
+  "meta": {
+    "instanceId": "8356fa659808c23f4e75b06da8577f2a44876741dbd41bb19d8e4018cbb11761"
+  },
+  "id": "qQYA9NXhpmzqv8KN",
+  "tags": [
+    {
+      "createdAt": "2025-01-13T08:11:37.255Z",
+      "updatedAt": "2025-01-13T08:11:37.255Z",
+      "id": "qzVoLPK8hjPeePt1",
+      "name": "mailun"
+    }
+  ]
+}

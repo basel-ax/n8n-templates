@@ -1,0 +1,1280 @@
+{
+  "name": "Categorization Cluster Content Opportunities 011025",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        100
+      ],
+      "id": "cde4cbc6-fd8e-450e-98c2-735564577ad7",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -100
+      ],
+      "id": "461d8147-3942-41f6-b40d-19fdd5877efc",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "N20CD6FcL79RauXg",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Edit Fields').item.json.keyword_research_file_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2108933567,
+          "mode": "list",
+          "cachedResultName": "Master All KW Variations",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o3FJWtJuAJ82sEAljMU9bmVtVYDDlMuywtcVqIPKVxI/edit#gid=2108933567"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        0,
+        -100
+      ],
+      "id": "b985948c-8a42-4646-8ed1-be0720541594",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0TkG4m4qvNfLJuIb",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[{\n  \"main_keyword\": \"the main keyword\",\t\n  \"keyword\": \"the keyword\",\n\t\"category\": \"the assigned category\"\n    \n},\n{\n   \"main_keyword\": \"the main keyword\",\t \n  \"keyword\": \"the keyword\",\n\t\"category\": \"the assigned category\"\n   \n}\n]"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        -100
+      ],
+      "id": "0bf9e1d8-ec47-4115-b069-0ae181df64dc",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        400,
+        -460
+      ],
+      "id": "f9c50765-c3a4-4795-8703-fed5f255f4cf",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Google Drive').item.json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 489129606,
+          "mode": "list",
+          "cachedResultName": "Categories",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zCvXeo0YSFwk5n7VYqDcqPf86CbAWFcc1rS_aBj-xP0/edit#gid=489129606"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Main Keyword": "={{ $json.main_keyword }}",
+            "Keyword": "={{ $json.keyword }}",
+            "Category": "={{ $json.category }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Main Keyword",
+              "displayName": "Main Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Keyword",
+              "displayName": "Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        620,
+        -460
+      ],
+      "id": "49cdb375-1ee4-4b5b-94c6-68a94331b180",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0TkG4m4qvNfLJuIb",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        420,
+        -140
+      ],
+      "id": "0e9f2bb7-e64b-4406-8d37-d07b1888dfef",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a content creation strategist and expert in creating seo-optimized content.\n\nAnalyze the keywords and categories and identify those that are categorized as Quick Wins, Authority Builders, and Emerging Topics.\n\nWrite an engaging, seo-optimized title and 2-3 sentence description for keywords categorized as:\n- Authority Builders\n- Quick Wins\n- Emerging Topics\n\nUse the following data to create the titles and description.\n {{ $json.category }}\n{{ $json.keyword }}\n\nFormat the output as shown below:\n\n[{\n\t\"keyword\": \"the keyword\",\n    \"category\": \"the category\",\n    \"title\": \"the engaging title\",\n  \"description\": \"2-3 sentence description\"\n},\n  {\n\t\"keyword\": \"the keyword\",\n    \"category\": \"the category\",\n    \"title\": \"the engaging title\",\n  \"description\": \"2-3 sentence description\"\n}]",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an expert creator of SEO-optimized articles for publication on a website. Your task is to identify the keywords categorized as Quick Wins, Authority Builders, and Emerging Topics. You will write an engaging seo-optimized title and description for each of the keywords categorized as Quick Wins, Authority Builders, and Emerging Topics."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        800,
+        -140
+      ],
+      "id": "ba74e7eb-0a35-46a3-ab23-2b559d09e0b6",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        740,
+        40
+      ],
+      "id": "56636cc0-ed2d-4bee-9f24-8b5a7330ae6f",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "N20CD6FcL79RauXg",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[{\n\t\"keyword\": \"the keyword\",\n    \"category\": \"the category\",\n    \"title\": \"the engaging title\",\n  \"description\": \"2-3 sentence description\"\n},\n  {\n\t\"keyword\": \"the keyword\",\n    \"category\": \"the category\",\n    \"title\": \"the engaging title\",\n  \"description\": \"2-3 sentence description\"\n}]"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        980,
+        80
+      ],
+      "id": "cee01893-ba5b-4efc-9161-49088fc33032",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Google Drive').item.json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1527977149,
+          "mode": "list",
+          "cachedResultName": "Content Opps from Categories",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oaKZcPCeU5vvljj6M20R8T6-O6DVl2nRoCROxG9oBdw/edit#gid=1527977149"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Keyword": "={{ $json.output[0].keyword }}",
+            "Category": "={{ $json.output[0].category }}",
+            "Title": "={{ $json.output[0].title }}",
+            "Description": "={{ $json.output[0].description }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Keyword",
+              "displayName": "Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1160,
+        -140
+      ],
+      "id": "3e75c197-f335-48da-a6f1-f5ec872e8603",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0TkG4m4qvNfLJuIb",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "fa613938-57a8-49f6-a01b-723028c6cbf3",
+              "leftValue": "={{ $json.category }}",
+              "rightValue": "Unknown",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        600,
+        -140
+      ],
+      "id": "d9a48bf0-8b11-4bb9-859d-fa9aa4132444",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a keyword research and SEO assistant. Your task is to analyze the provided keyword data and categorize each keyword into one of the following categories: Quick Wins, Authority Builders, Emerging Topics, or Unknown. Use the data below to guide your analysis:\n\nQuick Wins: Identify keywords with relatively high Monthly Search Volume (MSV) and low Keyword Difficulty (KW Difficulty). These keywords should be easier to rank for and provide immediate traffic potential. If MSV is medium or low, but KW Difficulty is very low, consider them as Quick Wins.\n\nAuthority Builders: Select keywords with high MSV and high KW Difficulty. These are competitive keywords that are essential for establishing authority in the niche. They may not rank immediately but are critical for long-term strategic content.\n\nEmerging Topics: For this category, examine trends across the dataset, including autocomplete, people also ask, and subtopics. Look for:\n\n- Keywords with low MSV but unique phrasing or growing interest.\n- Topics that highlight emerging trends or address unmet user needs.\n- Related keywords that, when grouped together, indicate an opportunity to create content ahead of competitors.\n\nUnknown: Categorize keywords that do not fit the other categories as unknown.\n\nIt is critically important that you output all keywords with a category.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an expert data analysist and SEO-optimization expert. You will analyze all of the keywords in the attached Google Sheet from list Master All KW Variations.\n\nYou will categorize each keyword as Quick Wins, Authority Builders, Emerging Topics, or Unknown.\n\nYou will out put all keywords with a category."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -120,
+        -340
+      ],
+      "id": "ced74fa6-d53e-499a-bee4-05bfa02022fa",
+      "name": "AI Agent Categories"
+    },
+    {
+      "parameters": {
+        "content": "## Gets KWs from Master List and Categorizes\nCategorizes keywords as Quick Wins, Authority Builders, Emerging Topics, and Unknown.",
+        "height": 540,
+        "width": 520
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -480
+      ],
+      "id": "72d7db3c-60e4-4c23-88ca-52ce66272df3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Send All Categorized Keywords to Gsheet\nSends all classifications including unknown. (Not sure if unknown is needed.)\n",
+        "height": 260,
+        "width": 520
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        360,
+        -560
+      ],
+      "id": "a88d737d-3066-45d1-8ed7-9873941e3661",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Creates Title and Description for each categorized keyword.\nSends to Gsheet",
+        "height": 460,
+        "width": 1020
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        340,
+        -260
+      ],
+      "id": "e06ee6af-c24f-4d6f-9f8c-b872fd2c1e86",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.keyword_research_file_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Main Keyword",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o3FJWtJuAJ82sEAljMU9bmVtVYDDlMuywtcVqIPKVxI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -760,
+        100
+      ],
+      "id": "04180301-edfa-4e8e-9bcb-a482b550ab6e",
+      "name": "Get Main Keyword",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0TkG4m4qvNfLJuIb",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1x-lFFAQ0mseld3j5uALxNBkttrt9HmUVa4HJDsop10A",
+          "mode": "list",
+          "cachedResultName": "Template Content Opportunities 011025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1x-lFFAQ0mseld3j5uALxNBkttrt9HmUVa4HJDsop10A/edit?usp=drivesdk"
+        },
+        "name": "={{ $json['Main Keyword'] }} Content Opportunties {{ $now.format('MM-dd-yyyy') }}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1UC3Ns5qlF3Yr2AewWXjZCedbESB9fox_",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -620,
+        100
+      ],
+      "id": "c463f493-316b-49f5-a89b-50903e23c35d",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "xoxZNsYgI8cpsCEF",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Manually set KW Research File ID \n\nEnter the file id (from the url).",
+        "height": 380
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        -100
+      ],
+      "id": "9a025130-8825-4f11-90fb-20fc647d39cc",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "690e7690-567a-41b1-982e-132672ecd567",
+              "name": "keyword_research_file_id",
+              "value": "1o3FJWtJuAJ82sEAljMU9bmVtVYDDlMuywtcVqIPKVxI",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -960,
+        100
+      ],
+      "id": "c4b7f06c-1a8e-4725-8740-d484766cf2f7",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        340,
+        780
+      ],
+      "id": "099814cb-cc59-42a8-bc3c-ae38927898df",
+      "name": "Split Out2"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        900,
+        780
+      ],
+      "id": "f91b1aa7-1d98-4e38-953e-68383cf415f2",
+      "name": "Split Out3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Analyze the attached Google sheet which is a dataset of keyword variations including related, suggested, and ideas. These different variations are identified by Type. Data for these variations provided includes monthly search volume (MSV), keyword difficulty, (KW Difficulty), Competition (low, medium, and high) and cost per click (CPC). \n\nYour primary task is to analyze the keywords and group them into into clusters based on semantic similarity and search intent. Provide the main keyword, cluster name, and the grouped keywords.\n\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an expert data analysist and SEO strategist. You analyze large datasets and find helpful patterns and way of using the data.\n\nYou are analyzing keyword data including:\n- Related Keywords\n- Keyword Suggestions\n- Keyword Ideas\n- Autocomplete search terms\n- People also ask \n- NLP based subtopics\n\nYour primary task is to analyze the data to determine the search intent and to identify content creation opportunities.\n\nOutput the results in JSON.\n\nIt is critical that you do not output special characters like '''json, \\n. And do not include any leading messages like Here is a list of all the keywords."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -120,
+        500
+      ],
+      "id": "193157ff-9aae-4f3b-b07a-0283aa8662be",
+      "name": "AI Agent Analyze and Group KWs into Clusters"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Edit Fields').item.json.keyword_research_file_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2108933567,
+          "mode": "list",
+          "cachedResultName": "Master All KW Variations",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o3FJWtJuAJ82sEAljMU9bmVtVYDDlMuywtcVqIPKVxI/edit#gid=2108933567"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        -80,
+        740
+      ],
+      "id": "9a186801-83c5-4346-9243-f32bd46f6a0b",
+      "name": "Get KWs from Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0TkG4m4qvNfLJuIb",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        340,
+        440
+      ],
+      "id": "e9e2747e-a78b-4466-9ced-a0c657965cff",
+      "name": "Split Out Clusters"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8aec3cd6-d05f-43e7-a6a2-f1164ce07be3",
+              "name": "cluster",
+              "value": "={{ $json.cluster }}",
+              "type": "string"
+            },
+            {
+              "id": "b0f99cf5-1709-4958-8c57-045f17d42dd0",
+              "name": "keywords",
+              "value": "={{ $json.keywords.split(\",\").map(keyword => keyword.trim()) }}",
+              "type": "array"
+            },
+            {
+              "id": "981a55c9-8744-446e-af68-e1fdbbdb908a",
+              "name": "main_keyword",
+              "value": "={{ $json.main_keyword }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        540,
+        440
+      ],
+      "id": "c827ca01-be65-459e-bf8a-8624f6f7a34a",
+      "name": "Set Cluster Fields"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "keywords",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        760,
+        440
+      ],
+      "id": "51259606-ae1a-4902-9908-fac150c38160",
+      "name": "Split Out Keywords"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Google Drive').item.json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Clusters",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wkU7uDvG3QV-fPGy-k2yXummBZ4okLxzn-o3s8Jrts4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Main Keyword": "={{ $('Set Cluster Fields').item.json.main_keyword }}",
+            "Cluster": "={{ $('Set Cluster Fields').item.json.cluster }}",
+            "Keywords": "={{ $json.keywords }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Main Keyword",
+              "displayName": "Main Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        980,
+        440
+      ],
+      "id": "6519134a-7a53-4b0c-948b-287f88ff9a62",
+      "name": "Cluster Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0TkG4m4qvNfLJuIb",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a content strategist. Based on the following clustered keywords, create a content plan for each cluster. For each cluster:\n1. Provide one pillar article with:\n    - An engaging seo-optimized title\n    - A 2-3 sentence description explaining the focus of the article.\n\n2. Provide 2 **supporting articles** with:\n   - A title\n   - A 2-3 sentence description explaining the focus of the article.\n\n3. Ensure the content plan aligns with the cluster's theme and addresses relevant user intents (e.g., informational, commercial).\n\nHere are the clusters and keywords:\n\nCluster: {{ $json.cluster }}\nKeywords: {{ $json.keywords }}\n\nFormat the output as shown below:\n\n{\n\t\"cluster\": \"name of the cluster\",\n\t\"type\": \"pillar\", \n    \"title\": \"title of the article\",\n    \"description\": \"description of the article\"\n},\n{\n\t\"cluster\": \"name of the cluster\",\n\t\"type\": \"supporting\", \n    \"title\": \"title of the article\",\n    \"description\": \"description of the article\"\n},\n{\n\t\"cluster\": \"name of the cluster\",\n\t\"type\": \"supporting\", \n    \"title\": \"title of the article\",\n    \"description\": \"description of the article\"\n}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an expert content strategist specializing in SEO-driven content planning. Your goal is to analyze keyword clusters and generate actionable content ideas that maximize search visibility and align with user intent. Always produce clear, structured outputs, and ensure each suggestion has a logical connection to the provided keywords. Be concise but descriptive in your explanations.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        540,
+        780
+      ],
+      "id": "732aab37-5a44-47e2-8949-c83577a5f175",
+      "name": "Agent Create Content Opps"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        700
+      ],
+      "id": "b96103d5-52e2-4299-bb63-a7919b98f212",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "N20CD6FcL79RauXg",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[\n  {\n    \"main_keyword\": \"string\",\n    \"cluster\": \"string\",\n    \"keywords\": \"string\"\n  },\n{\n  \"main_keyword\": \"string\",  \n  \"cluster\": \"string\",\n    \"keywords\": \"string\"\n  }\n]\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        720
+      ],
+      "id": "bcedd58d-ccda-4127-8e90-7375c269e17f",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        480,
+        980
+      ],
+      "id": "c4886e48-fa9a-442e-aac4-69d77c35f7d9",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "N20CD6FcL79RauXg",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[{\n\t\"cluster\": \"name of the cluster\",\n\t\"type\": \"pillar\", \n    \"title\": \"title of the article\",\n    \"description\": \"description of the article\"\n},\n{\n\t\"cluster\": \"name of the cluster\",\n\t\"type\": \"supporting\", \n    \"title\": \"title of the article\",\n    \"description\": \"description of the article\"\n}]"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        760,
+        980
+      ],
+      "id": "c9c28dbc-8135-41d3-b139-3632785c779f",
+      "name": "Structured Output Parser3"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Google Drive').item.json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1463413320,
+          "mode": "list",
+          "cachedResultName": "Content Opps from Clusters",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Az7IWYVLx6Vuu0zDuMf0m-tBGr_6hf7p1wwCFQ9qx2A/edit#gid=1463413320"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Cluster": "={{ $json.cluster }}",
+            "Type": "={{ $json.type }}",
+            "Title": "={{ $json.title }}",
+            "Description": "={{ $json.description }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1140,
+        780
+      ],
+      "id": "0094b4f6-07ec-4429-87e1-d88e302161dc",
+      "name": "Google Sheets3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0TkG4m4qvNfLJuIb",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Gets Keywords from Master Keyword List\nCreates clusters based on semantic similarity and search intent.",
+        "height": 520,
+        "width": 480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        360
+      ],
+      "id": "1d43c5e4-e392-4fba-b324-6c886a2e4324",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Adds Cluster and Keywords to Clusters Sheet\n",
+        "height": 260,
+        "width": 840
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        280,
+        360
+      ],
+      "id": "b80fd37b-07e0-4b77-baad-694d9b651900",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Create Pillar and Supporting Content Opps\nCreates title and description for Pillar and Support content opportunities.\nPrompted (at the moment) to create two supporting articles for each pillar.",
+        "height": 460,
+        "width": 1020
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        280,
+        660
+      ],
+      "id": "974a03ea-0ab0-4137-a7c0-db5b1b24a8da",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Categorize and Create Content Opportunities\n",
+        "height": 920,
+        "width": 1820,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        -680
+      ],
+      "id": "18a99459-cae4-4e53-8d67-d61627cdda64",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Cluster and Create Content Opportunities\n",
+        "height": 920,
+        "width": 1820,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        260
+      ],
+      "id": "7a2c8256-6eb3-4e17-8d7b-8efc7c4468ca",
+      "name": "Sticky Note8"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Categories",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Categories",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent Categories",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Categories": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Main Keyword": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Analyze and Group KWs into Clusters",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent Categories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get Main Keyword",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out2": {
+      "main": [
+        [
+          {
+            "node": "Agent Create Content Opps",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out3": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Analyze and Group KWs into Clusters": {
+      "main": [
+        [
+          {
+            "node": "Split Out2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Out Clusters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get KWs from Sheet": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Analyze and Group KWs into Clusters",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Clusters": {
+      "main": [
+        [
+          {
+            "node": "Set Cluster Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Cluster Fields": {
+      "main": [
+        [
+          {
+            "node": "Split Out Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Keywords": {
+      "main": [
+        [
+          {
+            "node": "Cluster Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent Create Content Opps": {
+      "main": [
+        [
+          {
+            "node": "Split Out3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Analyze and Group KWs into Clusters",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent Analyze and Group KWs into Clusters",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent Create Content Opps",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agent Create Content Opps",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4236e4ee-f841-4c28-9a61-ff50f0fa647f",
+  "meta": {
+    "instanceId": "71dab517465d2a8651416ecb249f8c625dbec8eefd6983c3cc92ac04a871a46a"
+  },
+  "id": "FSZwcT1yb89JhMkI",
+  "tags": []
+}

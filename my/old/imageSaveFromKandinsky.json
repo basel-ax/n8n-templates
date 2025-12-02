@@ -1,0 +1,516 @@
+{
+  "name": "imageSaveFromKandinsky",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -20
+      ],
+      "id": "74fecb85-dcc4-4dc1-bc1f-6647680d110b",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "content": "## Set vars\n- set projectId\n- set SelectImageStatus\n- set UpdateImageStatus",
+        "height": 380,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -200
+      ],
+      "id": "61371279-5eb1-4f9e-9193-12f64dbc62cb",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "27faeea4-5a95-4487-84eb-00138b8b620f",
+              "name": "projectId",
+              "value": 2,
+              "type": "number"
+            },
+            {
+              "id": "ba4ef26b-75a1-4625-b75c-88b8f3263d21",
+              "name": "SelectImageStatus",
+              "value": "ReadyToGenerate",
+              "type": "string"
+            },
+            {
+              "id": "34c3b36b-cc0b-4d37-b516-afeb4232392f",
+              "name": "UpdateImageStatus",
+              "value": "Generate",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -180,
+        -20
+      ],
+      "id": "81d57f3f-5372-4ac6-8b8a-963da0241d36",
+      "name": "Set vars"
+    },
+    {
+      "parameters": {
+        "model_id": 4,
+        "prompt": "={{ $json.text }}"
+      },
+      "type": "n8n-nodes-fusionbrain.fusionbrainAiNode",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        -20
+      ],
+      "id": "50f6e4e9-f62b-424a-b451-11bb77ece687",
+      "name": "fusionbrain.ai",
+      "credentials": {
+        "hapheusFusionbrainAiCredentialsApi": {
+          "id": "OTDg9GjptSPyKrAZ",
+          "name": "fusionbrain.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "images",
+          "mode": "list",
+          "cachedResultName": "images"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "status",
+              "value": "={{ $json.SelectImageStatus }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        160,
+        -20
+      ],
+      "id": "57928449-d054-4a17-a4ad-58565f5103b6",
+      "name": "SelectImage",
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Update Image Prompt\n- need clean text. Использую отдельную ноду для чистки текста\n- fusionbrain - max 1000 symbols",
+        "height": 520,
+        "width": 780,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        100,
+        -200
+      ],
+      "id": "7745e89d-f3e9-4c38-b983-506fa5b580e2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "textsWithManipulations": {
+          "textsWithManipulationsValues": [
+            {
+              "dataSources": {
+                "dataSource": [
+                  {
+                    "text": "={{ $json.prompt }}"
+                  }
+                ]
+              },
+              "manipulations": {
+                "manipulation": [
+                  {
+                    "action": "replace",
+                    "replaceMode": "predefinedRule",
+                    "predefinedRule": "characterGroups",
+                    "newline": true,
+                    "alpha": true,
+                    "extended": true
+                  },
+                  {
+                    "action": "replace",
+                    "replaceMode": "predefinedRule"
+                  },
+                  {
+                    "action": "replace",
+                    "substring": "**"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-text-manipulation.textManipulation",
+      "typeVersion": 1,
+      "position": [
+        360,
+        -20
+      ],
+      "id": "e2cb0871-c2c0-4a38-a857-7bc06f0e8ffc",
+      "name": "CleanText"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ты специалист по созданию описания для изображений для генерации с помощью искуственного интелекта. Пользователь сделал описание для генерации изображения. Преобразуй это описание для улучшения результата. Результатом должно быть описание не более 900 символов. Описание от плльзователя: {{ $json.data }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        520,
+        -20
+      ],
+      "id": "f5a22193-557f-43ae-b519-e388a53be7db",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        520,
+        160
+      ],
+      "id": "3c66c3e6-486d-4945-b150-8cb37ece0f04",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "KmyQ8X0FhAXzxIPv",
+          "name": "Ollama local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Image save from Kandinsky\n- generate Image in fusionbrain node\n- update Image in Postgre. Set new Prompt & save Base64 ",
+        "height": 420,
+        "width": 760,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -200
+      ],
+      "id": "801ce7f5-1724-4b14-ac16-461ed037f4cf",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        -20
+      ],
+      "id": "d30cf210-9096-416c-8e92-e3a5bd037ab7",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "images",
+          "mode": "list",
+          "cachedResultName": "images"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('SelectImage').item.json.id }}",
+            "base64": "={{ $json.data }}",
+            "prompt": "={{ $('Basic LLM Chain').item.json.text }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "alt_title",
+              "displayName": "alt_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "slug",
+              "displayName": "slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sort",
+              "displayName": "sort",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "rewrite_notes",
+              "displayName": "rewrite_notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "article_id",
+              "displayName": "article_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "base64",
+              "displayName": "base64",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "path",
+              "displayName": "path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1480,
+        -20
+      ],
+      "id": "11b89252-92cd-4808-b9bb-b1cc3d79928d",
+      "name": "UpdateImagePromptAndBase64",
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set vars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set vars": {
+      "main": [
+        [
+          {
+            "node": "SelectImage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SelectImage": {
+      "main": [
+        [
+          {
+            "node": "CleanText",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fusionbrain.ai": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CleanText": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "fusionbrain.ai",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "UpdateImagePromptAndBase64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "40060859-a3b4-4e44-90d1-10fa25b55a7f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8356fa659808c23f4e75b06da8577f2a44876741dbd41bb19d8e4018cbb11761"
+  },
+  "id": "TMeEmhnsCxNq75Ix",
+  "tags": [
+    {
+      "createdAt": "2025-01-13T08:11:37.255Z",
+      "updatedAt": "2025-01-13T08:11:37.255Z",
+      "id": "qzVoLPK8hjPeePt1",
+      "name": "mailun"
+    }
+  ]
+}

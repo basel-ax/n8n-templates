@@ -1,0 +1,611 @@
+{
+  "name": "cg_coins_markets",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d306d915-6b56-4805-afab-063fd91a5ba1",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items[0].json.map(item => { \n  return {\n    json: item,\n  }\n})\n"
+      },
+      "id": "e5bbe608-a92d-4395-b20b-201c54ad8bda",
+      "name": "Create JSON-items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        360,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aff5b247-3ab1-4f87-aa8d-b45a5002199f",
+              "name": "page",
+              "value": "={{ $runIndex+1 }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -100,
+        260
+      ],
+      "id": "c3703f33-2437-48cf-b13a-9059b7ac0b66",
+      "name": "Set page"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8c69047c-f17d-4b46-b645-f70b629590af",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        360,
+        260
+      ],
+      "id": "02236f88-7872-477d-a993-422462a8637c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        120,
+        480
+      ],
+      "id": "c0873ea2-1d14-46c4-85ec-a8712bdc62b8",
+      "name": "Wait",
+      "webhookId": "87e3d455-8f49-4c6c-b92c-267cc6c7c369"
+    },
+    {
+      "parameters": {
+        "url": "https://api.coingecko.com/api/v3/coins/markets",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "x-cg-demo-api-key",
+              "value": "CG-cUwG9J5mh99hZAd7VjNzREi4"
+            },
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "page",
+              "value": "={{ $json.page }}"
+            },
+            {
+              "name": "vs_currency",
+              "value": "usd"
+            }
+          ]
+        }
+      },
+      "name": "coins/markets",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        120,
+        260
+      ],
+      "typeVersion": 1,
+      "id": "cf165a7b-e950-4347-961a-80db63aaf79b"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "coins",
+          "mode": "list",
+          "cachedResultName": "coins"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "symbol": "={{ $json.symbol }}",
+            "name": "={{ $json.name }}",
+            "image": "={{ $json.image }}",
+            "current_price": "={{ $json.current_price }}",
+            "market_cap": "={{ $json.market_cap }}",
+            "market_cap_rank": "={{ $json.market_cap_rank }}",
+            "fully_diluted_valuation": "={{ $json.fully_diluted_valuation }}",
+            "total_volume": "={{ $json.total_volume }}",
+            "high_24h": "={{ $json.high_24h }}",
+            "low_24h": "={{ $json.low_24h }}",
+            "price_change_24h": "={{ $json.price_change_24h }}",
+            "price_change_percentage_24h": "={{ $json.price_change_percentage_24h }}",
+            "market_cap_change_24h": "={{ $json.market_cap_change_24h }}",
+            "market_cap_change_percentage_24h": "={{ $json.market_cap_change_percentage_24h }}",
+            "circulating_supply": "={{ $json.circulating_supply }}",
+            "total_supply": "={{ $json.total_supply }}",
+            "max_supply": "={{ $json.max_supply }}",
+            "ath": "={{ $json.ath }}",
+            "ath_change_percentage": "={{ $json.ath_change_percentage }}",
+            "ath_date": "={{ $json.ath_date }}",
+            "atl": "={{ $json.atl }}",
+            "atl_change_percentage": "={{ $json.atl_change_percentage }}",
+            "atl_date": "={{ $json.atl_date }}",
+            "roi": "={{ $json.roi }}",
+            "last_updated": "={{ $json.last_updated }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "symbol",
+              "displayName": "symbol",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "image",
+              "displayName": "image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "current_price",
+              "displayName": "current_price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "market_cap",
+              "displayName": "market_cap",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "market_cap_rank",
+              "displayName": "market_cap_rank",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "fully_diluted_valuation",
+              "displayName": "fully_diluted_valuation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "total_volume",
+              "displayName": "total_volume",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "high_24h",
+              "displayName": "high_24h",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "low_24h",
+              "displayName": "low_24h",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "price_change_24h",
+              "displayName": "price_change_24h",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "price_change_percentage_24h",
+              "displayName": "price_change_percentage_24h",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "market_cap_change_24h",
+              "displayName": "market_cap_change_24h",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "market_cap_change_percentage_24h",
+              "displayName": "market_cap_change_percentage_24h",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "circulating_supply",
+              "displayName": "circulating_supply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "total_supply",
+              "displayName": "total_supply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "max_supply",
+              "displayName": "max_supply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "ath",
+              "displayName": "ath",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "ath_change_percentage",
+              "displayName": "ath_change_percentage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "ath_date",
+              "displayName": "ath_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "atl",
+              "displayName": "atl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "atl_change_percentage",
+              "displayName": "atl_change_percentage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "atl_date",
+              "displayName": "atl_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "roi",
+              "displayName": "roi",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "last_updated",
+              "displayName": "last_updated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d8b0d2cf-bcc7-4d4c-9174-f77e23e22a15",
+      "name": "Coins Upsert",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        580,
+        40
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8nerrors",
+          "mode": "list",
+          "cachedResultName": "n8nerrors"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "node": "Coins Upsert",
+            "data": "={{ $json }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "node",
+              "displayName": "node",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "data",
+              "displayName": "data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        840,
+        120
+      ],
+      "id": "78d52a31-61e5-4728-8149-67380910a56d",
+      "name": "n8nerrors insert",
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create JSON-items": {
+      "main": [
+        [
+          {
+            "node": "Coins Upsert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set page": {
+      "main": [
+        [
+          {
+            "node": "coins/markets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Set page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "coins/markets": {
+      "main": [
+        [
+          {
+            "node": "Create JSON-items",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Coins Upsert": {
+      "main": [
+        [],
+        [
+          {
+            "node": "n8nerrors insert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "764ecfa9-0369-450f-b404-6474f8983eec",
+  "meta": {
+    "instanceId": "8356fa659808c23f4e75b06da8577f2a44876741dbd41bb19d8e4018cbb11761"
+  },
+  "id": "GRfRMss498s7OChD",
+  "tags": [
+    {
+      "createdAt": "2025-01-01T07:27:59.251Z",
+      "updatedAt": "2025-01-01T07:27:59.251Z",
+      "id": "WlPvxnEEROnUtUhy",
+      "name": "tradebots"
+    }
+  ]
+}

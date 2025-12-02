@@ -1,0 +1,138 @@
+{
+  "name": "mailun_quotes_2_telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "chatId": "-1002373852519",
+        "text": "=`{{ $json.Text }}` \n\nАвтор {{ $json.Author }}",
+        "additionalFields": {}
+      },
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1180,
+        180
+      ],
+      "typeVersion": 1,
+      "id": "09d56756-0fc3-40f9-9ab4-fe54cb67a8a6",
+      "credentials": {
+        "telegramApi": {
+          "id": "DVKNdrcl7aGfAl6D",
+          "name": "chakramtest_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "databaseId": 167158,
+        "tableId": 415392,
+        "limit": 1,
+        "additionalOptions": {
+          "filters": {
+            "fields": [
+              {
+                "field": 3181383,
+                "value": "New"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        480,
+        180
+      ],
+      "id": "dd260afd-ae7e-48e4-8a71-cbc9d41b058e",
+      "name": "quotes_New_limit1",
+      "credentials": {
+        "baserowApi": {
+          "id": "6YyQy1vbry2396WG",
+          "name": "mailun"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7759951c-b70d-4451-af0e-b065f7784a96",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "databaseId": 167158,
+        "tableId": 415392,
+        "rowId": "={{ $json.id }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 3181383,
+              "fieldValue": "Send"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        740,
+        500
+      ],
+      "id": "d194a5c2-e799-416b-a9c7-d016dc2eae09",
+      "name": "quotes_update_Send",
+      "credentials": {
+        "baserowApi": {
+          "id": "6YyQy1vbry2396WG",
+          "name": "mailun"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "quotes_New_limit1": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "quotes_update_Send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "quotes_New_limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "98767df8-ca26-4a49-a6cd-a71bcf20edbc",
+  "meta": {
+    "instanceId": "8356fa659808c23f4e75b06da8577f2a44876741dbd41bb19d8e4018cbb11761"
+  },
+  "id": "x1MpvZ6fT7HNlQLH",
+  "tags": []
+}

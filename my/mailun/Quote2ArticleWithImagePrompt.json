@@ -1,0 +1,1137 @@
+{
+  "name": "Quote2ArticleWithImagePrompt",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        20,
+        140
+      ],
+      "id": "27c448f0-2ca8-4d1a-865a-306d39dd10dd",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "content": "## Source to Article\n- Выбираю данные из Baserow. \n- У записи в Baserow меняю статус на Article\n- Создаю запись в таблице Article в БД Postgre ",
+        "height": 600,
+        "width": 580,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        600,
+        -120
+      ],
+      "id": "b5947f58-d2f8-4126-b3d0-9f8d9846e49d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Create new Image in Postgre\n- take ID from Article. \n- generate prompt, based on quote, by fabric\n- Создаю запись в таблице Image в БД Postgre",
+        "height": 380,
+        "width": 580,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -120
+      ],
+      "id": "fccacac1-ec05-4023-92cd-22fcf76413c9",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Before start\n```bash\nollama run llama3.1\n```",
+        "height": 120,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -40
+      ],
+      "id": "2c4fd52f-34a8-4aaf-817b-3387a551a535",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "articles",
+          "mode": "list",
+          "cachedResultName": "articles"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "title": "= Baserow quote {{ $json.id }}",
+            "body": "={{ $json.Text }}\n\n__{{ $json.Source }}__\n\n__{{ $json.Author }}__",
+            "status": "={{ $('SetVars').item.json.SelectArticleStatus }}",
+            "project_id": "={{ $('SetVars').item.json.ProjectId }}",
+            "source": "Baserow",
+            "source_id": "={{ $json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "slug",
+              "displayName": "slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "short_description",
+              "displayName": "short_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "body",
+              "displayName": "body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rewrite_notes",
+              "displayName": "rewrite_notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "telegram_message_id",
+              "displayName": "telegram_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "schedule_date",
+              "displayName": "schedule_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "source_id",
+              "displayName": "source_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        980,
+        60
+      ],
+      "id": "f2e48321-7a75-4741-8fe3-99f4aa0d6d3c",
+      "name": "NewArticle",
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Set vars\n- set ProjectId\n- set ImageStatus\n- set BaserowStatus\n- set SelectArticleStatus\n- set SelectImageStatus\n- set UpdateImageStatus\n- set UpdateArticleStatus",
+        "height": 440,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        280,
+        -140
+      ],
+      "id": "5af1e81c-6b48-4003-9d63-d9811d2d03a7",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "images",
+          "mode": "list",
+          "cachedResultName": "images"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "article_id": "={{ $('NewArticle').item.json.id }}",
+            "status": "={{ $('SetVars').item.json.ImageStatus }}",
+            "prompt": "={{ $json.stdout }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "alt_title",
+              "displayName": "alt_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "slug",
+              "displayName": "slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sort",
+              "displayName": "sort",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rewrite_notes",
+              "displayName": "rewrite_notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "article_id",
+              "displayName": "article_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "base64",
+              "displayName": "base64",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "path",
+              "displayName": "path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1620,
+        60
+      ],
+      "id": "6c4723cb-1fbb-4300-bbf1-9ea5a427bf4f",
+      "name": "NewImage",
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "textsWithManipulations": {
+          "textsWithManipulationsValues": [
+            {
+              "dataSources": {
+                "dataSource": [
+                  {
+                    "text": "={{ $json.prompt }}"
+                  }
+                ]
+              },
+              "manipulations": {
+                "manipulation": [
+                  {
+                    "action": "replace",
+                    "replaceMode": "predefinedRule",
+                    "predefinedRule": "characterGroups",
+                    "newline": true,
+                    "alpha": true,
+                    "extended": true
+                  },
+                  {
+                    "action": "replace",
+                    "replaceMode": "predefinedRule"
+                  },
+                  {
+                    "action": "replace",
+                    "substring": "**",
+                    "value": " "
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-text-manipulation.textManipulation",
+      "typeVersion": 1,
+      "position": [
+        1960,
+        60
+      ],
+      "id": "cebccc94-de93-4e49-93ab-d1ac73403980",
+      "name": "CleanText"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ты специалист по созданию описания изображений для генерации с помощью искуственного интелекта. Пользователь сделал описание для генерации изображения. Переработай это описание для улучшения результата. Результатом должно быть описание не более 900 символов. Описание от плльзователя: {{ $json.data }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        2140,
+        60
+      ],
+      "id": "3a8c5a17-2a27-466d-a80c-9c6f28393e3c",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        240
+      ],
+      "id": "301e4714-3a2d-46e2-8011-931729bf38aa",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "KmyQ8X0FhAXzxIPv",
+          "name": "Ollama local"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Update Image Prompt\n- need clean text. Использую отдельную ноду для чистки текста\n- fusionbrain - max 1000 symbols",
+        "height": 520,
+        "width": 1120,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        -120
+      ],
+      "id": "078d33e7-8921-47bc-8efa-eb820da2db2b",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "articles",
+          "mode": "list",
+          "cachedResultName": "articles"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('NewArticle').item.json.id }}",
+            "status": "={{ $('SetVars').item.json.UpdateArticleStatus }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "alt_title",
+              "displayName": "alt_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "slug",
+              "displayName": "slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sort",
+              "displayName": "sort",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "rewrite_notes",
+              "displayName": "rewrite_notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "article_id",
+              "displayName": "article_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "base64",
+              "displayName": "base64",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "path",
+              "displayName": "path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2860,
+        60
+      ],
+      "id": "b72f3cf5-d938-494a-a1c3-2092c05ebbee",
+      "name": "UpdateArticleStatus",
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "27faeea4-5a95-4487-84eb-00138b8b620f",
+              "name": "ProjectId",
+              "value": 2,
+              "type": "number"
+            },
+            {
+              "id": "ba4ef26b-75a1-4625-b75c-88b8f3263d21",
+              "name": "ImageStatus",
+              "value": "ReadyToGenerate",
+              "type": "string"
+            },
+            {
+              "id": "d51501b7-8517-490b-8c0e-783cf415845f",
+              "name": "SelectArticleStatus",
+              "value": "GenerateImages",
+              "type": "string"
+            },
+            {
+              "id": "36d562db-3409-48bd-a676-2e89bdff367b",
+              "name": "BaserowStatus",
+              "value": "Article",
+              "type": "string"
+            },
+            {
+              "id": "3a57d014-fa10-416d-a02e-0dcb304ebe01",
+              "name": "SelectImageStatus",
+              "value": "ReadyToGenerate",
+              "type": "string"
+            },
+            {
+              "id": "7625b113-ba8e-4ceb-a373-bf216d577781",
+              "name": "UpdateImageStatus",
+              "value": "ReadyToGenerate",
+              "type": "string"
+            },
+            {
+              "id": "dd98b176-694e-4db3-8d02-e639bd385e27",
+              "name": "UpdateArticleStatus",
+              "value": "GenerateImage",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        340,
+        140
+      ],
+      "id": "fa2037af-af99-413f-9b8b-5e31c50268a0",
+      "name": "SetVars"
+    },
+    {
+      "parameters": {
+        "databaseId": 167158,
+        "tableId": 415392,
+        "limit": 1,
+        "additionalOptions": {
+          "filters": {
+            "fields": [
+              {
+                "field": 3181383,
+                "operator": "contains",
+                "value": "New"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        680,
+        60
+      ],
+      "id": "3dc30877-507c-4191-8a43-735691ba3bca",
+      "name": "SelectQuoteNew",
+      "credentials": {
+        "baserowApi": {
+          "id": "6YyQy1vbry2396WG",
+          "name": "mailun"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "databaseId": 167158,
+        "tableId": 415392,
+        "rowId": "={{ $('SelectQuoteNew').item.json.id }}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 3181383,
+              "fieldValue": "={{ $('SetVars').item.json.BaserowStatus }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1,
+      "position": [
+        820,
+        300
+      ],
+      "id": "09ed330d-4eec-4e07-9842-bcd667f6275f",
+      "name": "UpdateQuotesStatus",
+      "credentials": {
+        "baserowApi": {
+          "id": "6YyQy1vbry2396WG",
+          "name": "mailun"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=export GOROOT=/usr/local/go && export GOPATH=$HOME/go && export PATH=$GOPATH/bin:$GOROOT/bin:$HOME/.local/bin:$PATH && echo \"{{ $('SelectQuoteNew').item.json.Text }}\" | fabric --pattern mailun_create_quote_art_prompt "
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        60
+      ],
+      "id": "e25e6c9e-d694-4c99-9bb4-c09c543fc984",
+      "name": "CreateQuoteArtPrompt"
+    },
+    {
+      "parameters": {
+        "textsWithManipulations": {
+          "textsWithManipulationsValues": [
+            {
+              "dataSources": {
+                "dataSource": [
+                  {
+                    "text": "={{ $json.text }}"
+                  }
+                ]
+              },
+              "manipulations": {
+                "manipulation": [
+                  {
+                    "action": "replace",
+                    "replaceMode": "predefinedRule",
+                    "predefinedRule": "characterGroups",
+                    "newline": true,
+                    "alpha": true
+                  },
+                  {
+                    "action": "replace",
+                    "substring": "**",
+                    "value": " "
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-text-manipulation.textManipulation",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        60
+      ],
+      "id": "59c36f91-4276-477f-9fd6-f4c4c2929393",
+      "name": "CleanText_2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "images",
+          "mode": "list",
+          "cachedResultName": "images"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('NewImage').item.json.id }}",
+            "prompt": "={{ $('Basic LLM Chain').item.json.text }}",
+            "status": "={{ $('SetVars').item.json.UpdateImageStatus }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "alt_title",
+              "displayName": "alt_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "slug",
+              "displayName": "slug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sort",
+              "displayName": "sort",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "rewrite_notes",
+              "displayName": "rewrite_notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "link",
+              "displayName": "link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "article_id",
+              "displayName": "article_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "base64",
+              "displayName": "base64",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "path",
+              "displayName": "path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2640,
+        60
+      ],
+      "id": "9a0dc309-be72-4908-ba0b-2af7588fc9fc",
+      "name": "UpdateImagePrompt&Status",
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "SetVars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NewArticle": {
+      "main": [
+        [
+          {
+            "node": "CreateQuoteArtPrompt",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "UpdateQuotesStatus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CleanText": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "CleanText_2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NewImage": {
+      "main": [
+        [
+          {
+            "node": "CleanText",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetVars": {
+      "main": [
+        [
+          {
+            "node": "SelectQuoteNew",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SelectQuoteNew": {
+      "main": [
+        [
+          {
+            "node": "NewArticle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CreateQuoteArtPrompt": {
+      "main": [
+        [
+          {
+            "node": "NewImage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CleanText_2": {
+      "main": [
+        [
+          {
+            "node": "UpdateImagePrompt&Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UpdateImagePrompt&Status": {
+      "main": [
+        [
+          {
+            "node": "UpdateArticleStatus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ce15d5aa-00e6-493e-a2c4-f25f5d14c059",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8356fa659808c23f4e75b06da8577f2a44876741dbd41bb19d8e4018cbb11761"
+  },
+  "id": "qQYA9NXhpmzqv8KN",
+  "tags": [
+    {
+      "createdAt": "2025-01-13T08:11:37.255Z",
+      "updatedAt": "2025-01-13T08:11:37.255Z",
+      "id": "qzVoLPK8hjPeePt1",
+      "name": "mailun"
+    }
+  ]
+}

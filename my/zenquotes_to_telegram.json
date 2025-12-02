@@ -1,0 +1,402 @@
+{
+  "name": "zenquotes_to_telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        560,
+        520
+      ],
+      "typeVersion": 1,
+      "id": "21a40ce0-dd35-4399-bfee-9e2355260e86"
+    },
+    {
+      "parameters": {
+        "chatId": "-1001845439825",
+        "text": "=✒️ Poem of the day:\n {{ $json['0']['q'] }} by  {{ $json['0']['a'] }}\n☁️",
+        "additionalFields": {}
+      },
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        900,
+        520
+      ],
+      "typeVersion": 1,
+      "id": "d6655182-3586-42cb-a530-1fe0cd26714f",
+      "credentials": {
+        "telegramApi": {
+          "id": "hFaeVSpAyyDNDQMj",
+          "name": "Telegram account 1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://zenquotes.io/api/quotes",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        720,
+        520
+      ],
+      "typeVersion": 1,
+      "id": "5f58d310-225c-4f73-a781-196c7d5e940a"
+    }
+  ],
+  "pinData": {
+    "HTTP Request": [
+      {
+        "json": [
+          {
+            "q": "Life is really simple, but men insist on making it complicated. ",
+            "a": "Confucius",
+            "c": "64",
+            "h": "<blockquote>&ldquo;Life is really simple, but men insist on making it complicated. &rdquo; &mdash; <footer>Confucius</footer></blockquote>"
+          },
+          {
+            "q": "We are most nearly ourselves when we achieve the seriousness of the child at play.",
+            "a": "Heraclitus",
+            "c": "82",
+            "h": "<blockquote>&ldquo;We are most nearly ourselves when we achieve the seriousness of the child at play.&rdquo; &mdash; <footer>Heraclitus</footer></blockquote>"
+          },
+          {
+            "q": "It's not whether you get knocked down, its whether you get back up.",
+            "a": "Vince Lombardi",
+            "c": "67",
+            "h": "<blockquote>&ldquo;It's not whether you get knocked down, its whether you get back up.&rdquo; &mdash; <footer>Vince Lombardi</footer></blockquote>"
+          },
+          {
+            "q": "Surround yourself only with people who are going to take you higher.",
+            "a": "Oprah Winfrey",
+            "c": "68",
+            "h": "<blockquote>&ldquo;Surround yourself only with people who are going to take you higher.&rdquo; &mdash; <footer>Oprah Winfrey</footer></blockquote>"
+          },
+          {
+            "q": "Art, like morality, consists of drawing the line somewhere.",
+            "a": "Gilbert Chesterton",
+            "c": "59",
+            "h": "<blockquote>&ldquo;Art, like morality, consists of drawing the line somewhere.&rdquo; &mdash; <footer>Gilbert Chesterton</footer></blockquote>"
+          },
+          {
+            "q": "If you pick up a starving dog and make him prosperous he will not bite you. This is the principal difference between a dog and man.",
+            "a": "Mark Twain",
+            "c": "131",
+            "h": "<blockquote>&ldquo;If you pick up a starving dog and make him prosperous he will not bite you. This is the principal difference between a dog and man.&rdquo; &mdash; <footer>Mark Twain</footer></blockquote>"
+          },
+          {
+            "q": "Happiness is the meaning and the purpose of life, the whole aim and end of human existence.",
+            "a": "Aristotle",
+            "c": "91",
+            "h": "<blockquote>&ldquo;Happiness is the meaning and the purpose of life, the whole aim and end of human existence.&rdquo; &mdash; <footer>Aristotle</footer></blockquote>"
+          },
+          {
+            "q": "Forgive those who have hurt you.",
+            "a": "Les Brown",
+            "c": "32",
+            "h": "<blockquote>&ldquo;Forgive those who have hurt you.&rdquo; &mdash; <footer>Les Brown</footer></blockquote>"
+          },
+          {
+            "q": "People are weird. When we find someone with weirdness that is compatible with ours, we team up and call it love.",
+            "a": "Dr. Seuss",
+            "c": "112",
+            "h": "<blockquote>&ldquo;People are weird. When we find someone with weirdness that is compatible with ours, we team up and call it love.&rdquo; &mdash; <footer>Dr. Seuss</footer></blockquote>"
+          },
+          {
+            "q": "By seeking and blundering we learn.",
+            "a": "Johann Wolfgang von Goethe",
+            "c": "35",
+            "h": "<blockquote>&ldquo;By seeking and blundering we learn.&rdquo; &mdash; <footer>Johann Wolfgang von Goethe</footer></blockquote>"
+          },
+          {
+            "q": "Love never keeps a man from pursuing his destiny.",
+            "a": "Paulo Coelho",
+            "c": "49",
+            "h": "<blockquote>&ldquo;Love never keeps a man from pursuing his destiny.&rdquo; &mdash; <footer>Paulo Coelho</footer></blockquote>"
+          },
+          {
+            "q": "A random act of kindness, no matter how small, can make a tremendous impact on someone else's life.",
+            "a": "Roy T. Bennett",
+            "c": "99",
+            "h": "<blockquote>&ldquo;A random act of kindness, no matter how small, can make a tremendous impact on someone else's life.&rdquo; &mdash; <footer>Roy T. Bennett</footer></blockquote>"
+          },
+          {
+            "q": "Life and death are of supreme importance. Time swiftly passes by and opportunity is lost.",
+            "a": "Dogen",
+            "c": "89",
+            "h": "<blockquote>&ldquo;Life and death are of supreme importance. Time swiftly passes by and opportunity is lost.&rdquo; &mdash; <footer>Dogen</footer></blockquote>"
+          },
+          {
+            "q": "The more often a stupidity is repeated, the more it gets the appearance of wisdom.",
+            "a": "Voltaire",
+            "c": "82",
+            "h": "<blockquote>&ldquo;The more often a stupidity is repeated, the more it gets the appearance of wisdom.&rdquo; &mdash; <footer>Voltaire</footer></blockquote>"
+          },
+          {
+            "q": "Death walks faster than the wind and never returns what he has taken.",
+            "a": "Hans Christian Andersen",
+            "c": "69",
+            "h": "<blockquote>&ldquo;Death walks faster than the wind and never returns what he has taken.&rdquo; &mdash; <footer>Hans Christian Andersen</footer></blockquote>"
+          },
+          {
+            "q": "As one grows weaker one is less susceptible to suffering. There is less hurt because there is less to hurt.",
+            "a": "Jack London",
+            "c": "107",
+            "h": "<blockquote>&ldquo;As one grows weaker one is less susceptible to suffering. There is less hurt because there is less to hurt.&rdquo; &mdash; <footer>Jack London</footer></blockquote>"
+          },
+          {
+            "q": "Do not look for a sanctuary in anyone except your self.",
+            "a": "Buddha",
+            "c": "55",
+            "h": "<blockquote>&ldquo;Do not look for a sanctuary in anyone except your self.&rdquo; &mdash; <footer>Buddha</footer></blockquote>"
+          },
+          {
+            "q": "The fact of the matter is that there will be nothing learned from any challenge in which we don't try our hardest.",
+            "a": "Josh Waitzkin",
+            "c": "114",
+            "h": "<blockquote>&ldquo;The fact of the matter is that there will be nothing learned from any challenge in which we don't try our hardest.&rdquo; &mdash; <footer>Josh Waitzkin</footer></blockquote>"
+          },
+          {
+            "q": "The goal is not to show how great you are to others, but how vulnerable you are to yourself.",
+            "a": "Maxime Lagace",
+            "c": "92",
+            "h": "<blockquote>&ldquo;The goal is not to show how great you are to others, but how vulnerable you are to yourself.&rdquo; &mdash; <footer>Maxime Lagace</footer></blockquote>"
+          },
+          {
+            "q": "The thing about smart people is that they seem like crazy people to dumb people.",
+            "a": "Stephen Hawking",
+            "c": "80",
+            "h": "<blockquote>&ldquo;The thing about smart people is that they seem like crazy people to dumb people.&rdquo; &mdash; <footer>Stephen Hawking</footer></blockquote>"
+          },
+          {
+            "q": "The consequences of today are determined by the actions of the past. To change your future, alter your decisions today.",
+            "a": "Unknown",
+            "c": "119",
+            "h": "<blockquote>&ldquo;The consequences of today are determined by the actions of the past. To change your future, alter your decisions today.&rdquo; &mdash; <footer>Unknown</footer></blockquote>"
+          },
+          {
+            "q": "With self-discipline, almost anything is possible.",
+            "a": "Theodore Roosevelt",
+            "c": "50",
+            "h": "<blockquote>&ldquo;With self-discipline, almost anything is possible.&rdquo; &mdash; <footer>Theodore Roosevelt</footer></blockquote>"
+          },
+          {
+            "q": "Knowledge isn't power until it is applied.",
+            "a": "Dale Carnegie",
+            "c": "42",
+            "h": "<blockquote>&ldquo;Knowledge isn't power until it is applied.&rdquo; &mdash; <footer>Dale Carnegie</footer></blockquote>"
+          },
+          {
+            "q": "Abundance of knowledge does not teach men to be wise.",
+            "a": "Heraclitus",
+            "c": "53",
+            "h": "<blockquote>&ldquo;Abundance of knowledge does not teach men to be wise.&rdquo; &mdash; <footer>Heraclitus</footer></blockquote>"
+          },
+          {
+            "q": "Failure means you've now learned another valuable lesson that pushes you one step closer to success.",
+            "a": "Steve Harvey",
+            "c": "100",
+            "h": "<blockquote>&ldquo;Failure means you've now learned another valuable lesson that pushes you one step closer to success.&rdquo; &mdash; <footer>Steve Harvey</footer></blockquote>"
+          },
+          {
+            "q": "To be in harmony with the wholeness of things is not to have anxiety over imperfections.",
+            "a": "Dogen",
+            "c": "88",
+            "h": "<blockquote>&ldquo;To be in harmony with the wholeness of things is not to have anxiety over imperfections.&rdquo; &mdash; <footer>Dogen</footer></blockquote>"
+          },
+          {
+            "q": "In youth we run into difficulties. In old age difficulties run into us. ",
+            "a": "Beverly Sills",
+            "c": "72",
+            "h": "<blockquote>&ldquo;In youth we run into difficulties. In old age difficulties run into us. &rdquo; &mdash; <footer>Beverly Sills</footer></blockquote>"
+          },
+          {
+            "q": "Confidence breeds beauty.  ",
+            "a": "Estee Lauder",
+            "c": "27",
+            "h": "<blockquote>&ldquo;Confidence breeds beauty.  &rdquo; &mdash; <footer>Estee Lauder</footer></blockquote>"
+          },
+          {
+            "q": "Falling down is not failure. Failure comes when you stay where you have fallen.",
+            "a": "Socrates",
+            "c": "79",
+            "h": "<blockquote>&ldquo;Falling down is not failure. Failure comes when you stay where you have fallen.&rdquo; &mdash; <footer>Socrates</footer></blockquote>"
+          },
+          {
+            "q": "The power of human thought grows exponentially with the number of minds that share that thought.",
+            "a": "Dan Brown",
+            "c": "96",
+            "h": "<blockquote>&ldquo;The power of human thought grows exponentially with the number of minds that share that thought.&rdquo; &mdash; <footer>Dan Brown</footer></blockquote>"
+          },
+          {
+            "q": "People who bite the hand that feeds them usually lick the boot that kicks them.",
+            "a": "Eric Hoffer",
+            "c": "79",
+            "h": "<blockquote>&ldquo;People who bite the hand that feeds them usually lick the boot that kicks them.&rdquo; &mdash; <footer>Eric Hoffer</footer></blockquote>"
+          },
+          {
+            "q": "To travel is to be alive, but to get somewhere is to be dead.",
+            "a": "Alan Watts",
+            "c": "61",
+            "h": "<blockquote>&ldquo;To travel is to be alive, but to get somewhere is to be dead.&rdquo; &mdash; <footer>Alan Watts</footer></blockquote>"
+          },
+          {
+            "q": "Remain calm, serene, always in command of yourself. You will then find out how easy it is to get along. ",
+            "a": "Paramahansa Yogananda",
+            "c": "104",
+            "h": "<blockquote>&ldquo;Remain calm, serene, always in command of yourself. You will then find out how easy it is to get along. &rdquo; &mdash; <footer>Paramahansa Yogananda</footer></blockquote>"
+          },
+          {
+            "q": "You don't get in life what you want; you get in life what you are.",
+            "a": "Les Brown",
+            "c": "66",
+            "h": "<blockquote>&ldquo;You don't get in life what you want; you get in life what you are.&rdquo; &mdash; <footer>Les Brown</footer></blockquote>"
+          },
+          {
+            "q": "Give more than you think you can, trusting that you are richer than you think.",
+            "a": "Jon Kabat-Zinn",
+            "c": "78",
+            "h": "<blockquote>&ldquo;Give more than you think you can, trusting that you are richer than you think.&rdquo; &mdash; <footer>Jon Kabat-Zinn</footer></blockquote>"
+          },
+          {
+            "q": "There is an essence of when you are fearless, you become more creative.",
+            "a": "Gurbaksh Chahal",
+            "c": "71",
+            "h": "<blockquote>&ldquo;There is an essence of when you are fearless, you become more creative.&rdquo; &mdash; <footer>Gurbaksh Chahal</footer></blockquote>"
+          },
+          {
+            "q": "Think and wonder, wonder and think.",
+            "a": "Dr. Seuss",
+            "c": "35",
+            "h": "<blockquote>&ldquo;Think and wonder, wonder and think.&rdquo; &mdash; <footer>Dr. Seuss</footer></blockquote>"
+          },
+          {
+            "q": "What do we live for, if it is not to make life less difficult for each other?",
+            "a": "George Eliot",
+            "c": "77",
+            "h": "<blockquote>&ldquo;What do we live for, if it is not to make life less difficult for each other?&rdquo; &mdash; <footer>George Eliot</footer></blockquote>"
+          },
+          {
+            "q": "Be courteous to all, but intimate with few, and let those few be well tried before you give them your confidence. ",
+            "a": "George Washington",
+            "c": "114",
+            "h": "<blockquote>&ldquo;Be courteous to all, but intimate with few, and let those few be well tried before you give them your confidence. &rdquo; &mdash; <footer>George Washington</footer></blockquote>"
+          },
+          {
+            "q": "A memory is a beautiful thing, it's almost a desire that you miss.",
+            "a": "Gustave Flaubert",
+            "c": "66",
+            "h": "<blockquote>&ldquo;A memory is a beautiful thing, it's almost a desire that you miss.&rdquo; &mdash; <footer>Gustave Flaubert</footer></blockquote>"
+          },
+          {
+            "q": "If you realize that you're the problem, then you can change yourself, learn something and grow wiser. Don't blame other people for your problems.",
+            "a": "Robert Kiyosaki",
+            "c": "145",
+            "h": "<blockquote>&ldquo;If you realize that you're the problem, then you can change yourself, learn something and grow wiser. Don't blame other people for your problems.&rdquo; &mdash; <footer>Robert Kiyosaki</footer></blockquote>"
+          },
+          {
+            "q": "The primary cause of unhappiness is never the situation but your thoughts about it.",
+            "a": "Eckhart Tolle",
+            "c": "83",
+            "h": "<blockquote>&ldquo;The primary cause of unhappiness is never the situation but your thoughts about it.&rdquo; &mdash; <footer>Eckhart Tolle</footer></blockquote>"
+          },
+          {
+            "q": "If you change the way you look at things, the things you look at change. ",
+            "a": "Wayne Dyer",
+            "c": "73",
+            "h": "<blockquote>&ldquo;If you change the way you look at things, the things you look at change. &rdquo; &mdash; <footer>Wayne Dyer</footer></blockquote>"
+          },
+          {
+            "q": "Closing your eyes and listening to silence is self-care.",
+            "a": "Maxime Lagace",
+            "c": "56",
+            "h": "<blockquote>&ldquo;Closing your eyes and listening to silence is self-care.&rdquo; &mdash; <footer>Maxime Lagace</footer></blockquote>"
+          },
+          {
+            "q": "Everyone you admire was once a beginner.",
+            "a": "Jack Butcher",
+            "c": "40",
+            "h": "<blockquote>&ldquo;Everyone you admire was once a beginner.&rdquo; &mdash; <footer>Jack Butcher</footer></blockquote>"
+          },
+          {
+            "q": "Ability is a poor man's wealth.",
+            "a": "John Wooden",
+            "c": "31",
+            "h": "<blockquote>&ldquo;Ability is a poor man's wealth.&rdquo; &mdash; <footer>John Wooden</footer></blockquote>"
+          },
+          {
+            "q": "Happiness is a quality of the soul...not a function of one's material circumstances.",
+            "a": "Aristotle",
+            "c": "84",
+            "h": "<blockquote>&ldquo;Happiness is a quality of the soul...not a function of one's material circumstances.&rdquo; &mdash; <footer>Aristotle</footer></blockquote>"
+          },
+          {
+            "q": "Muddy water is best cleared by leaving it alone.",
+            "a": "Alan Watts",
+            "c": "48",
+            "h": "<blockquote>&ldquo;Muddy water is best cleared by leaving it alone.&rdquo; &mdash; <footer>Alan Watts</footer></blockquote>"
+          },
+          {
+            "q": "Leadership is solving problems",
+            "a": "Colin Powell",
+            "c": "30",
+            "h": "<blockquote>&ldquo;Leadership is solving problems&rdquo; &mdash; <footer>Colin Powell</footer></blockquote>"
+          },
+          {
+            "q": "I put my heart and soul into my work, and I have lost my mind in the process.",
+            "a": "Vincent van Gogh",
+            "c": "77",
+            "h": "<blockquote>&ldquo;I put my heart and soul into my work, and I have lost my mind in the process.&rdquo; &mdash; <footer>Vincent van Gogh</footer></blockquote>"
+          }
+        ]
+      }
+    ]
+  },
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "410391c3-3c16-45a1-8ec1-b97efac537c2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b6a84f8abad5aa824289ebfba28e6c6b6aa3955804ead66b307169a095f0fa13"
+  },
+  "id": "lJNByGtu06ayGdnk",
+  "tags": []
+}

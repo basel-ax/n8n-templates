@@ -1,0 +1,1236 @@
+{
+  "active": false,
+  "connections": {
+    "Google Perspective": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Вежливое общение",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Политика",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Политика": {
+      "main": [
+        [
+          {
+            "node": "Манифест",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ссылка?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Манифест": {
+      "main": [
+        [
+          {
+            "node": "Удалить сообщение",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Записи": {
+      "main": [
+        [
+          {
+            "node": "Сообщение в чат",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Удалить сообщение": {
+      "main": [
+        [
+          {
+            "node": "Бан навсегда",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Бан": {
+      "main": [
+        [
+          {
+            "node": "Удалить сообщение1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 30 min": {
+      "main": [
+        [
+          {
+            "node": "Разбан",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Бан навсегда": {
+      "main": [
+        [
+          {
+            "node": "Set2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set1": {
+      "main": [
+        [
+          {
+            "node": "#QA?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Это админ?": {
+      "main": [
+        [
+          {
+            "node": "NoOp3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Удалить сообщение2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Удалить сообщение2": {
+      "main": [
+        [
+          {
+            "node": "Ссылки — нельзя",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MySQL2": {
+      "main": [
+        [
+          {
+            "node": "MySQL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ссылка?": {
+      "main": [
+        [
+          {
+            "node": "Это админ?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set2": {
+      "main": [
+        [
+          {
+            "node": "MySQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Вежливое общение": {
+      "main": [
+        [
+          {
+            "node": "Бан",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "#QA?": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "MySQL2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New chat member?": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Perspective",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Удалить сообщение1": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "New chat member?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2023-04-18T04:58:03.817Z",
+  "id": "4",
+  "name": "Telegram Moderation Bot",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c29f7cb1-5ee1-48f9-ac3e-0fadf696a5ef",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -2060,
+        420
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "text": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+        "requestedAttributesUi": {
+          "requestedAttributesValues": [
+            {
+              "attributeName": "toxicity"
+            },
+            {
+              "attributeName": "threat"
+            },
+            {
+              "attributeName": "insult"
+            }
+          ]
+        },
+        "options": {
+          "languages": "ru"
+        }
+      },
+      "name": "Google Perspective",
+      "type": "n8n-nodes-base.googlePerspective",
+      "position": [
+        -1600,
+        660
+      ],
+      "typeVersion": 1,
+      "id": "b59de118-87df-4b6e-84e9-2a2d47b2df98",
+      "credentials": {
+        "googlePerspectiveOAuth2Api": {
+          "id": "3",
+          "name": "Google Perspective account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Google Perspective\"].json[\"attributeScores\"][\"INSULT\"][\"summaryScore\"][\"value\"]}}",
+              "operation": "larger",
+              "value2": 0.7
+            },
+            {
+              "value1": "={{$node[\"Google Perspective\"].json[\"attributeScores\"][\"THREAT\"][\"summaryScore\"][\"value\"]}}",
+              "operation": "larger",
+              "value2": 0.7
+            },
+            {
+              "value1": "={{$node[\"Google Perspective\"].json[\"attributeScores\"][\"TOXICITY\"][\"summaryScore\"][\"value\"]}}",
+              "operation": "larger",
+              "value2": 0.7
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -1440,
+        660
+      ],
+      "typeVersion": 1,
+      "notesInFlow": true,
+      "id": "232caf55-2211-4e25-9461-c4912a294de3",
+      "notes": "Грубо или нет?"
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "tg_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}"
+            }
+          ],
+          "string": [
+            {
+              "name": "tg_username",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"username\"]}}"
+            },
+            {
+              "name": "name",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"first_name\"]}}"
+            },
+            {
+              "name": "surname",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"last_name\"]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "toxic"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        500
+      ],
+      "notesInFlow": true,
+      "id": "e5002878-dde7-4617-aa7b-d195bdfa8e40",
+      "notes": "Значения переменных"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "Украин"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "Зеленск"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "украин"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "нет войне"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "рашисты"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "Нет войне"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "Политика",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1320,
+        800
+      ],
+      "notesInFlow": true,
+      "id": "86db4298-c29d-4fc5-8f9f-36eb4cbb8ac3"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}",
+        "text": "Деятельность REFORUM не влияет на политическую ситуацию. Мы работаем в интернациональной команде и с равным уважением относимся к жителям всех стран и континентов.\n\nНаши каналы останутся безопасным пространством для всех, кто готов быть с нами. Именно поэтому все сообщения и комментарии на политические темы мы будем убирать из чатов и соцсетей. Это наша позиция.",
+        "additionalFields": {
+          "reply_to_message_id": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"message_id\"]}}"
+        }
+      },
+      "name": "Манифест",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -1120,
+        800
+      ],
+      "notesInFlow": true,
+      "id": "eaa978fc-9226-445a-9d15-6e557e25316e",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      },
+      "notes": "Нет политике"
+    },
+    {
+      "parameters": {
+        "operation": "deleteMessage",
+        "chatId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}",
+        "messageId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"message_id\"]}}"
+      },
+      "name": "Удалить сообщение",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        800
+      ],
+      "notesInFlow": true,
+      "id": "2d6fa2b0-7b42-4967-a97f-ddc82cdb7b43",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}",
+        "text": "Записи будут доступны на платформе https://future-hub.ru\nчерез неделю после окончания форума и будут открыты 3 месяца. \nНапоминание и ссылку на платформу пришлем вам на почту.\n\n",
+        "additionalFields": {
+          "reply_to_message_id": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"message_id\"]}}"
+        }
+      },
+      "name": "Сообщение в чат",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        780
+      ],
+      "notesInFlow": true,
+      "id": "2fc662dc-5c51-4223-8501-9d01f0766d33",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      },
+      "notes": "Ссылка на записи"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "запис"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "Запис"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "Записи",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        800
+      ],
+      "notesInFlow": true,
+      "id": "a012c99b-39e4-4eba-a316-8ff1aaf30e53",
+      "notes": "Записи будут?"
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "requestMethod": "POST",
+        "url": "https://api.telegram.org/bot5436234704:AAH-DJSug9IZnQZAXHphwlbXhAvLShd6V0A/banChatMember",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "chat_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "chat_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Бан навсегда",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        800
+      ],
+      "id": "39e86ba3-f038-4ac8-92f3-8426af0e569f",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "9",
+          "name": "Query Auth Dobry Sosed"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "requestMethod": "POST",
+        "url": "https://api.telegram.org/bot5436234704:AAH-DJSug9IZnQZAXHphwlbXhAvLShd6V0A/banChatMember",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "chat_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "chat_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Бан",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        -1080,
+        500
+      ],
+      "id": "7b171ef7-d317-4420-8cd8-fc12fe214e8d",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "9",
+          "name": "Query Auth Dobry Sosed"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "requestMethod": "POST",
+        "url": "https://api.telegram.org/bot1395184274:AAGhagvnXjgjmw4paMKTwiBZB3JQPus_wME/unbanChatMember",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "chat_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}"
+            }
+          ]
+        },
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "chat_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Разбан",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        -700,
+        240
+      ],
+      "id": "8396b713-2afd-4a46-8dd8-5815f0439e24",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "9",
+          "name": "Query Auth Dobry Sosed"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "minutes"
+      },
+      "name": "Wait 30 min",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        -840,
+        240
+      ],
+      "webhookId": "7e283c95-1c9d-42aa-b1bc-92a519dc6532",
+      "id": "b078b0af-5bdc-495d-b765-831cee66b233"
+    },
+    {
+      "parameters": {
+        "table": "telegram_moderation",
+        "columns": "tg_id, tg_username, name, surname, text, type",
+        "options": {}
+      },
+      "name": "MySQL",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        500
+      ],
+      "id": "92b13a7a-66ff-4612-818f-dd7d8c8ce75a",
+      "credentials": {
+        "mySql": {
+          "id": "2",
+          "name": "MySQL u1115007"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "tg_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}"
+            }
+          ],
+          "string": [
+            {
+              "name": "tg_username",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"username\"]}}"
+            },
+            {
+              "name": "name",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"first_name\"]}}"
+            },
+            {
+              "name": "surname",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"last_name\"]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}"
+            },
+            {
+              "name": "msg_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"message_id\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        1520
+      ],
+      "notesInFlow": true,
+      "id": "16c12cac-60a6-46e9-b90d-ad11f16d8751",
+      "notes": "Значения переменных"
+    },
+    {
+      "parameters": {
+        "table": "telegram_all_msgs",
+        "columns": "tg_id, tg_username, name, surname, text, msg_id",
+        "options": {
+          "ignore": true
+        }
+      },
+      "name": "MySQL2",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        1560
+      ],
+      "id": "73a78067-3f8d-462f-96b3-81da905f3b63",
+      "credentials": {
+        "mySql": {
+          "id": "2",
+          "name": "MySQL u1115007"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 649779472
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 36895840
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 309440240
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 368934950
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 122565211
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 174844854
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 1390878288
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 263706708
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 1307995728
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 179828041
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 983029076
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 296799675
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 436451811
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 427669133
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 478353020
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 680122856
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 215940143
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 110782922
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 287494151
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 1914331
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}",
+              "operation": "equal",
+              "value2": 1101193406
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "Это админ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        1120
+      ],
+      "id": "57481ad4-0dde-4dfd-bef9-3681351e7dd6"
+    },
+    {
+      "parameters": {},
+      "name": "NoOp3",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        -380,
+        1020
+      ],
+      "typeVersion": 1,
+      "id": "22e9079b-4e87-45a8-80ce-fd074d8db266"
+    },
+    {
+      "parameters": {
+        "operation": "deleteMessage",
+        "chatId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}",
+        "messageId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"message_id\"]}}"
+      },
+      "name": "Удалить сообщение2",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        1220
+      ],
+      "notesInFlow": true,
+      "id": "f058886f-6603-4bae-85ec-ffa7313b90fe",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      },
+      "notes": "Ссылка на записи"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=update telegram_all_msgs\nset score = CASE\nwhen LENGTH(text) > 40 and text LIKE \"%#отзыв%\" then 10\nwhen text LIKE \"%#яблоко%\" then 10\nwhen LENGTH(text) > 100 and text LIKE \"%#конспект%\" then 8\nwhen LENGTH(text) > 300 then 5\nwhen LENGTH(text) > 40 and text LIKE \"%#qa%\" then 5\nwhen LENGTH(text) > 50 and text LIKE \"%#конспект%\" then 4\nwhen LENGTH(text) > 50 and text LIKE \"%#ясоздаюбудущее%\" then 4\nwhen text LIKE \"%пасибо%\" or text LIKE \"%лагодарю%\" or text LIKE \"%ожалуйста%\" then 4\nELSE 2\nEND\nWHERE tg_id={{$node[\"Set1\"].json[\"tg_id\"]}} and msg_id={{$node[\"Set1\"].json[\"msg_id\"]}}"
+      },
+      "name": "MySQL1",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        1560
+      ],
+      "id": "d3166cf8-81fe-4232-95e2-048281c9184a",
+      "credentials": {
+        "mySql": {
+          "id": "2",
+          "name": "MySQL u1115007"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "https://"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "http://"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "Ссылка?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -840,
+        1240
+      ],
+      "id": "b61aa168-c2f0-4caa-bb17-4b7be7648d20"
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "tg_id",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"id\"]}}"
+            }
+          ],
+          "string": [
+            {
+              "name": "tg_username",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"username\"]}}"
+            },
+            {
+              "name": "name",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"first_name\"]}}"
+            },
+            {
+              "name": "surname",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"last_name\"]}}"
+            },
+            {
+              "name": "text",
+              "value": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}"
+            },
+            {
+              "name": "type",
+              "value": "politics"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        780
+      ],
+      "notesInFlow": true,
+      "id": "92729a90-92eb-473d-9339-858ccef46aaa",
+      "notes": "Значения переменных"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}",
+        "text": "=Этот чат — пространство уважительного общения. Пожалуйста, выбирайте выражения и не размещайте спам.\nПользователь @{{$node[\"Telegram Trigger\"].json[\"message\"][\"from\"][\"username\"]}} отправлен в бан.",
+        "additionalFields": {
+          "reply_to_message_id": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"message_id\"]}}"
+        }
+      },
+      "name": "Вежливое общение",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -1260,
+        500
+      ],
+      "typeVersion": 1,
+      "notesInFlow": true,
+      "id": "85af5562-296a-42c6-abb0-99ecae0ffcf6",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      },
+      "notes": "Предупреждение"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}",
+        "text": "Пожалуйста, не размещайте ссылки на сторонние ресурсы в общем чате.\nЕсли вы хотите рассказать о своем проекте — свяжитесь с нашим Денисом @dulovv",
+        "additionalFields": {}
+      },
+      "name": "Ссылки — нельзя",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        1220
+      ],
+      "notesInFlow": true,
+      "id": "96aebbcd-b978-4fb6-a856-479c9d0d2f6e",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      },
+      "notes": "Ссылка на записи"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "#qa"
+            },
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"text\"]}}",
+              "operation": "contains",
+              "value2": "#QA"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "#QA?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        1440
+      ],
+      "id": "9368bbb0-1f5a-42de-93aa-92b49b2c7e31"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "append",
+        "sheetId": "1Po-6xaWKhZRm6a9XuU940Bp7sdlfhsGvTfeFEUQRBEE",
+        "range": "A:E",
+        "options": {}
+      },
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        1380
+      ],
+      "id": "74c5c5b1-c5e5-4901-8f10-06efd51a973d",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "4",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"new_chat_member\"][\"id\"]}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "name": "New chat member?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1820,
+        660
+      ],
+      "id": "18886a37-75d3-4843-bf2d-bca7d2c443c9"
+    },
+    {
+      "parameters": {},
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1600,
+        420
+      ],
+      "id": "e91dd53a-58f8-45c3-9fa1-8ad339932743"
+    },
+    {
+      "parameters": {
+        "operation": "deleteMessage",
+        "chatId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}",
+        "messageId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"message_id\"]}}"
+      },
+      "name": "Удалить сообщение1",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        500
+      ],
+      "notesInFlow": true,
+      "id": "c20f8d1c-0903-40db-be51-b33ec66a9300",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "additionalFields": {}
+      },
+      "id": "7a10c966-c9ec-440f-b7ca-bcc72bdaac9a",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2040,
+        660
+      ],
+      "webhookId": "c91e63a1-6af3-491a-bbf9-83cbc756cf28",
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Renad_bot"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2023-04-18T04:58:03.817Z",
+  "versionId": "84fe93d4-4254-43bc-9c04-25529d7974cd"
+}
