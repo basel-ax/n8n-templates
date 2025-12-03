@@ -1,0 +1,393 @@
+{
+  "name": "Coin Description to SEO Article with Image",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual_trigger",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        20,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "coins"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "description": "={{ $json.description }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {},
+        "operation": "select"
+      },
+      "id": "postgres_select_coins",
+      "name": "PostgreSQL - Select Coin Descriptions",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        280,
+        140
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "article_title_var",
+              "name": "articleTitle",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "article_text_var",
+              "name": "articleText",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "image_path_var",
+              "name": "imagePath",
+              "value": "/home/swenro11/projects/n8n-templates/my/articles/",
+              "type": "string"
+            },
+            {
+              "id": "hugo_content_path_var",
+              "name": "hugoContentPath",
+              "value": "content/posts/",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set_variables",
+      "name": "Set Variables",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "text": "=You are an SEO expert and content writer. Create a comprehensive SEO article based on the following cryptocurrency coin description:\n\n{{ $json.description }}\n\nThe article should include:\n- An engaging title\n- SEO-optimized content with relevant keywords\n- Proper heading structure (H1, H2, H3)\n- Meta description\n- At least 500 words of high-quality content\n- Conclusion section\n\nReturn the result in JSON format with 'title' and 'content' fields.",
+        "promptType": "define"
+      },
+      "id": "gemini_seo_article",
+      "name": "Google Gemini - Generate SEO Article",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        720,
+        140
+      ]
+    },
+    {
+      "id": "gemini_model",
+      "name": "Google Gemini Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        720,
+        280
+      ],
+      "parameters": {
+        "options": {},
+        "modelName": "models/gemini-2.0-flash"
+      },
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AlDwotqhFT4EfJXQ",
+          "name": "Google Gemini(PaLM) Api - toan.ngo"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "store_title",
+              "name": "articleTitle",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "store_content",
+              "name": "articleText",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "store_image_filename",
+              "name": "imageFilename",
+              "value": "=article-{{ $now.format('YYYY-MM-DD-HH-mm-ss') }}.png",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "store_article_data",
+      "name": "Store Article Data in Variables",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        940,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "text": "=Create a detailed image prompt based on this article content for image generation:\n\n{{ $json.articleText }}\n\nThe prompt should be:\n- Highly descriptive and visual\n- Suitable for AI image generation\n- Include style references (photorealistic, digital art, etc.)\n- Mention key visual elements from the article\n- Keep it under 500 characters",
+        "promptType": "define"
+      },
+      "id": "gemini_image_prompt",
+      "name": "Google Gemini - Generate Image Prompt",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1160,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "text": "=Generate an image based on this prompt: {{ $json.text }}\n\nUse the nano banana style - colorful, vibrant, and eye-catching visuals that would work well for cryptocurrency and blockchain topics.",
+        "promptType": "define"
+      },
+      "id": "gemini_nano_banana_image",
+      "name": "Google Gemini - Generate Nano Banana Image",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1380,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "={{ $json.imageFilename }}",
+        "binaryData": true,
+        "dataPropertyName": "imageData",
+        "fileExtension": "png"
+      },
+      "id": "save_image",
+      "name": "Save Image to Filesystem",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "command": "=hugo new {{ $json.hugoContentPath }}{{ $json.articleTitle }}.md"
+      },
+      "id": "create_hugo_file",
+      "name": "Create Hugo Content File",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "={{ $json.hugoContentPath }}{{ $json.articleTitle }}.md",
+        "text": "=---\ntitle: \"{{ $json.articleTitle }}\"\ndate: {{ $now.format('YYYY-MM-DD') }}\ndraft: false\nimage: \"{{ $json.imagePath }}{{ $json.imageFilename }}\"\ndescription: \"{{ $json.content }}\"\n---\n\n{{ $json.content }}",
+        "append": true,
+        "dataPropertyName": "fileContent"
+      },
+      "id": "append_article_content",
+      "name": "Append Article Content to File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        140
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "PostgreSQL - Select Coin Descriptions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PostgreSQL - Select Coin Descriptions": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Variables": {
+      "main": [
+        [
+          {
+            "node": "Google Gemini - Generate SEO Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini - Generate SEO Article": {
+      "main": [
+        [
+          {
+            "node": "Store Article Data in Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_languageModel": [
+        [
+          {
+            "node": "Google Gemini Model",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Article Data in Variables": {
+      "main": [
+        [
+          {
+            "node": "Google Gemini - Generate Image Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini - Generate Image Prompt": {
+      "main": [
+        [
+          {
+            "node": "Google Gemini - Generate Nano Banana Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_languageModel": [
+        [
+          {
+            "node": "Google Gemini Model",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini - Generate Nano Banana Image": {
+      "main": [
+        [
+          {
+            "node": "Save Image to Filesystem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "ai_languageModel": [
+        [
+          {
+            "node": "Google Gemini Model",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Image to Filesystem": {
+      "main": [
+        [
+          {
+            "node": "Create Hugo Content File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Hugo Content File": {
+      "main": [
+        [
+          {
+            "node": "Append Article Content to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "coin-description-seo-workflow-v1",
+  "meta": {
+    "instanceId": "coin-description-to-seo-article-workflow"
+  },
+  "id": "coin_description_to_seo_article",
+  "tags": [
+    {
+      "createdAt": "2025-12-02T23:46:34.415Z",
+      "updatedAt": "2025-12-02T23:46:34.415Z",
+      "id": "coin_seo_tag",
+      "name": "coin-seo"
+    }
+  ]
+}
