@@ -2,6 +2,9 @@
 
 This repository contains a collection of n8n workflows for various automation tasks. Below is a comprehensive list of all available workflows organized by category.
 
+## Usable link & repos  
+[seo-n8n-templates](https://github.com/pathavyer/seo-n8n-templates)  
+
 ## Table of Contents
 
 - [My Workflows](#my-workflows)
