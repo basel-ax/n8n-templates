@@ -1,0 +1,134 @@
+{
+  "name": "Youtube Video Analyser",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# YouTube Analysis\n",
+        "height": 260,
+        "width": 800,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        448
+      ],
+      "id": "defbca69-01cd-4e61-9c5f-0f3934b85412",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2103b25e-fbee-4d71-9224-280f1c2383da",
+              "name": "text",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        544
+      ],
+      "id": "cad62e18-74a9-48d1-a9ff-fc3ad4ebd2be",
+      "name": "Get Results"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "Give me the summary of this video",
+        "videoUrls": "={{ $json.Video }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        144,
+        544
+      ],
+      "id": "5ef6d6d1-8b7e-4dec-8e5a-b570085951e6",
+      "name": "Analyze video",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "5weD68VPT1I7TQV9",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Insert Video URL",
+        "formDescription": "Drop in a video URL for analysis.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Video",
+              "placeholder": "Youtube URL",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -128,
+        544
+      ],
+      "id": "87e4388f-d16f-4a6d-a32f-4464cf5f01c3",
+      "name": "On form submission1",
+      "webhookId": "68597dbb-d45f-4c80-a244-a7dc26887e92"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Analyze video": {
+      "main": [
+        [
+          {
+            "node": "Get Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission1": {
+      "main": [
+        [
+          {
+            "node": "Analyze video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3cdcec5f-6f40-43fd-9e68-cba6bfa01651",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fe1aba4525e5b6fc15b6213f26ce628e7d9d375f92f09c2f05bd5372f3959212"
+  },
+  "id": "J84uq2HQcrqHOP58",
+  "tags": []
+}
