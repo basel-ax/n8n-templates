@@ -1,0 +1,625 @@
+{
+  "name": "Veo3 Video Generation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "885eeced-ec50-4163-967e-589fb2fd2abf",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": " {\n   \"caption\": \"\",\n   \"idea\": \"\",\n   \"environment\": \"\",\n   \"status\": \"\"\n }"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        220
+      ],
+      "id": "40e452a3-d778-439e-982b-703b8641ee36",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        180,
+        220
+      ],
+      "id": "518efe74-f9ff-4033-bb08-12f123506af1",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "s1U0gcN2KPfYfbaF",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Generate an idea for a video or a script where a character is from the manhattan project and is shooting a video of their perspective maybe failing on an experiment or rejoicing on a success.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You generate viral short-form video ideas inspired by biblical characters or scenes, styled like modern TikTok vlogs. \nUse the think tool to verify.\nThese should feel personal, emotional, and often humorous.\n ** Think Tool Prompt (used before generation) **\n “How can I take a biblical moment or character and turn it into a relatable, viral, \nor funny TikTok-style video idea that feels natural, emotional, or modern?ˮ\n ** Output Requirements **\n Your response must include:- caption  Short, poetic or funny, TikTok-style. Include emojis and 35 hashtags \n(e.g., #biblevlog #foryou #holycomedy #ancientvibes).- idea  12 sentence summary of the action, story, or twist in the video.- environment  Describe what the set looks like: light, textures, mood, setting. Think “GoPro meets ancient Jerusalem.ˮ- status  Must be \"to create\", without quotation marks\n ** JSON Output Parser **\n Every output must strictly follow this format:\n {\n }\n  \"caption\": \"\",\n  \"idea\": \"\",\n  \"environment\": \"\",\n  \"status\": \"\"\n ** Sample Outputs **\n Example 1\n {\n  \"caption\": \"When Jesus gives you the silent treatment \n�\n�😶\n #jesusvlog #holycomedy\",\n  \"idea\": \"Jesus calmly stares at the camera while the disciple keeps asking, 'Are we lost?' – awkward silence builds up.\",\n  \"environment\": \"Desert trail, golden hour light, dry bushes around, warm rocky textures and wind softly blowing.\",\n  \"status\": \"ready for production\"\n }\n Example 2\n {\n  \"caption\": \"POV You just met Mary Magdalene and sheʼs not what you expected \n�\n�✨\n #biblevlog #foryou\",\n  \"idea\": \"A modern-style introduction of Mary Magdalene where she breaks the fourth wall with sarcasm and confidence.\",\n  \"environment\": \"Dusty stone home with narrow light beams, clay walls, fabric drapes blowing slightly in the breeze.\",\n  \"status\": \"ready for production\"\n }\n Example 3\n {\n  \"caption\": \"Me trying to explain the flood before it happened \n�\n�🐘\n #noahvibes #bibletok\",\n  \"idea\": \"Noah explains why heʼs building the ark, while others laugh in the background — like a vlog rant.\",\n  \"environment\": \"Half-built wooden structure, cloudy sky, goats wandering around, mud everywhere, distant laughter.\"\n \"status\": \"concept only\"\n }"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "99edbe2e-3676-4219-90dc-40a850c3e63c",
+      "name": "Idea Generator"
+    },
+    {
+      "parameters": {
+        "description": "Use this tool to verify we are in sync with the story."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        300,
+        260
+      ],
+      "id": "7d9dc771-7a04-47c4-a84d-d4f59b6a589e",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a prompt for the Veo3 video based on the following information:\nIdea: {{ $json.output.idea }}\nEnvironment: {{ $json.output.environment }}",
+        "options": {
+          "systemMessage": "You are a professional cinematic prompt generator for AI video tools. \nYour task is to convert a short-form video idea and its environment description \n(inspired by biblical or ancient-world themes) \ninto a highly detailed, camera-aware, \nemotionally rich prompt suitable for generating a cinematic AI video using Veo3.\n You must understand the emotional tone, visual aesthetics, \nand storytelling style of short-form TikTok videos that imitate biblical scenes with modern pacing and framing.\n ** Veo3 Prompt Structure Guidelines **\n Each prompt should be natural, cinematic, and visually immersive, including:\n  Scene description  Describe the overall environment clearly (terrain, buildings, light, movement).\n  Character focus  If the idea involves a person, \ninclude their position, outfit style (biblical era), mood/expression, and framing (e.g., close-up, wide shot).\n  Camera movement  Always include one cinematic camera motion \n(e.g., slow push-in, handheld tracking, drone pan, orbit, dolly backward).\n  Time of day & lighting  Set the mood with light (e.g., golden hour, harsh daylight, candlelit interior).\n  Atmosphere & texture  Mention dust, wind, fabric movement, shadows, \nreflections, or imperfections in the scene to increase realism.\n  Style & quality  Include cinematic tone, analog warmth, \nslightly soft vintage film look, GoPro-like closeness if appropriate.\n ** Input **\n  You will receive two fields: idea, environment\n  Return only the complete and detailed Veo3 prompt, no additional text.\n ** Example Output **\n A biblical man stands in front of a half-built wooden ark, \ngesturing passionately as he explains something to the camera. \nThe camera follows him handheld-style, moving slightly as he paces. \nIn the background, groups of villagers are laughing and pointing. \nThe sky is overcast with low clouds, and goats wander through muddy terrain. \nThe man wears worn, ancient robes, \nhis feet muddy, his tone frustrated but hopeful.\nThe scene has a documentary-style realism, with soft golden highlights breaking through cloud gaps. \nLight wind moves fabric and rustles dry straw around the ark. \nShot in cinematic 24fps with natural tones and slight vintage softness"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        620,
+        0
+      ],
+      "id": "6de908f0-2fa4-4a57-8f43-581b13d71d41",
+      "name": "Video Prompt Generator"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        640,
+        200
+      ],
+      "id": "0122285e-c6cd-46ac-b14f-965d65e8a2b5",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "s1U0gcN2KPfYfbaF",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/veo-3.0-generate-preview:predictLongRunning",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-api-key",
+              "value": "YOUR-API-KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"instances\": [\n    {\n      \"prompt\":  {{ JSON.stringify($json.output) }}\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        60,
+        500
+      ],
+      "id": "51461a75-1bf3-4e20-84f0-234707cf6b22",
+      "name": "Generate Video"
+    },
+    {
+      "parameters": {
+        "url": "=https://generativelanguage.googleapis.com/v1beta/{{ $json.name }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-api-key",
+              "value": "YOUR-API-KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        500
+      ],
+      "id": "0fe32d8c-ec01-4e90-9ac9-62d25e85887b",
+      "name": "Check Completion"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3cf0f4f2-ecb0-4847-911f-c91ea90792db",
+              "leftValue": "={{ $json.done }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        500,
+        500
+      ],
+      "id": "936cb93d-4aa7-4bbc-b7b1-38f121dd6c60",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        680
+      ],
+      "id": "7b2ad7f6-866d-4fde-8793-d4e71f7f26a8",
+      "name": "Wait",
+      "webhookId": "06b56c18-b734-4efb-bd59-cff1f340db93"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1iHpfrZjzndNPgm0TT6_chLSD9p2dzUc4ZTRjqT-lAbw",
+          "mode": "list",
+          "cachedResultName": "Veo Videos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iHpfrZjzndNPgm0TT6_chLSD9p2dzUc4ZTRjqT-lAbw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iHpfrZjzndNPgm0TT6_chLSD9p2dzUc4ZTRjqT-lAbw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Caption": "={{ $('Idea Generator').item.json.output.caption }}",
+            "Idea": "={{ $('Idea Generator').item.json.output.idea }}",
+            "Envitonment": "={{ $('Idea Generator').item.json.output.environment }}",
+            "Status": "={{ $('Idea Generator').item.json.output.status }}",
+            "Video URL": "={{ $('Save to Drive').item.json.webViewLink }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Caption",
+              "displayName": "Caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Idea",
+              "displayName": "Idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Envitonment",
+              "displayName": "Envitonment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video URL",
+              "displayName": "Video URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1040,
+        740
+      ],
+      "id": "c4b46e6e-c514-4c61-945b-013bf3fa0bf5",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2ItdkILLi1szEYe2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Check Completion').item.json.response.generateVideoResponse.generatedSamples[0].video.uri }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-api-key",
+              "value": "YOUR-API-KEY"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          },
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "={{ $json.fileName }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1020,
+        0
+      ],
+      "id": "03386688-07c6-462a-8f9d-1979d8216847",
+      "name": "Download Video"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c05eea84-f6ac-4955-8378-310bc717645e",
+              "name": "fileName",
+              "value": "={{ $('Idea Generator').item.json.output.caption.slice(0, 50) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        780,
+        480
+      ],
+      "id": "ba6cc838-09cf-4a96-b803-28cf494e48e3",
+      "name": "Add File Name from Caption"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "={{ $json.fileName }}",
+        "name": "={{ $json.fileName }}.{{ ($binary[$json.fileName].fileExtension) }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1sQsshlHMilDLOvEc0tQeNZxgtp01F6_1",
+          "mode": "list",
+          "cachedResultName": "generated videos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1sQsshlHMilDLOvEc0tQeNZxgtp01F6_1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1020,
+        240
+      ],
+      "id": "7b7b96de-bd53-45a3-afbd-84238464eada",
+      "name": "Save to Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "J918h22iMWj98czt",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        480
+      ],
+      "id": "2607d700-bfdf-4434-9dee-303a1857a14f",
+      "name": "Share Link",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "J918h22iMWj98czt",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Idea Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Idea Generator",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Idea Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Idea Generator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idea Generator": {
+      "main": [
+        [
+          {
+            "node": "Video Prompt Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Video Prompt Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video Prompt Generator": {
+      "main": [
+        [
+          {
+            "node": "Generate Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video": {
+      "main": [
+        [
+          {
+            "node": "Check Completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Completion": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Add File Name from Caption",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Check Completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video": {
+      "main": [
+        [
+          {
+            "node": "Save to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add File Name from Caption": {
+      "main": [
+        [
+          {
+            "node": "Download Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Drive": {
+      "main": [
+        [
+          {
+            "node": "Share Link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share Link": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "13c2891e-6af6-4e21-8a88-e532616bcf6b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "041b18268525d28d5106f55476fe80528ca9fe39f96f9db983655750d3bdadd9"
+  },
+  "id": "vRLpyBYPOzVyX43L",
+  "tags": []
+}

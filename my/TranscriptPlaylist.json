@@ -201,8 +201,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1808,
-        448
+        1792,
+        352
       ],
       "id": "ead84bc6-c2eb-48ec-8493-80b043380175",
       "name": "Insert rows in a table",
@@ -230,8 +230,8 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
-        1600,
-        448
+        1616,
+        352
       ],
       "id": "d0047fe2-ce55-4321-a22c-8e3ead2474dc",
       "name": "Analyze video",
@@ -271,7 +271,7 @@
       "typeVersion": 2.2,
       "position": [
         1408,
-        192
+        336
       ],
       "id": "f3df62e2-89b9-49e5-8d9f-8f7da0c2ef74",
       "name": "If"
@@ -381,7 +381,13 @@
     },
     "If": {
       "main": [
-        [],
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Analyze video",
@@ -407,7 +413,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "f8ebd3b6-2951-4d51-843f-e442e31ab8f9",
+  "versionId": "472e1f30-b143-47a7-ac9b-3069a28983d6",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8356fa659808c23f4e75b06da8577f2a44876741dbd41bb19d8e4018cbb11761"
@@ -415,10 +421,10 @@
   "id": "XcBtkNRIJkm6qDpj",
   "tags": [
     {
-      "name": "livenature",
-      "id": "uolhYXGmlWrVbGcV",
       "updatedAt": "2025-12-08T14:20:00.994Z",
-      "createdAt": "2025-12-08T14:20:00.994Z"
+      "createdAt": "2025-12-08T14:20:00.994Z",
+      "id": "uolhYXGmlWrVbGcV",
+      "name": "livenature"
     }
   ]
 }
