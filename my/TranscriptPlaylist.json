@@ -1,0 +1,424 @@
+{
+  "name": "TranscriptPlaylist",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ce872e8d-3fcc-429e-a064-d82572d545cc",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -224,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "playlistItem",
+        "operation": "getAll",
+        "playlistId": "PL8yUG0fkbdXIHGSic_D4Ahvs9Z1mEP87n",
+        "part": [
+          "*",
+          "contentDetails",
+          "snippet",
+          "id",
+          "status"
+        ],
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "369dcc96-a955-44d3-a993-e0a839c13aee",
+      "name": "YouTube Playlist",
+      "type": "n8n-nodes-base.youTube",
+      "position": [
+        128,
+        320
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "pfrWQmcWGXW419PP",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 508,
+        "width": 652,
+        "color": 4
+      },
+      "id": "fd39d2d1-8f57-4188-86f3-eadf3d5d5545",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        32
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e4419110-3663-4917-88a4-3d59446f6f04",
+      "name": "Loop Over Items1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        944,
+        320
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract video URLs, titles, and add an id starting from 2\nreturn items.map((item, index) => {\n  const videoId = item.json.snippet.resourceId.videoId;\n  const title = item.json.snippet.title;\n  return {\n    json: {\n      videoId: videoId,\n      url: `https://youtu.be/${videoId}`,\n      title: title\n    }\n  };\n});\n"
+      },
+      "id": "eb92b3a2-d76b-4cef-9018-c0709f67d41e",
+      "name": "titles/URL",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        432,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "videoId, title, url",
+        "options": {}
+      },
+      "id": "a07be202-4eb6-40c6-b1fd-97f8c8b6d763",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        704,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "📺 **YouTube Playlist**\n\nFetches all videos from a specific YouTube playlist.\n\n**How to change:** Change the `playlistId` to use a different playlist. Adjust `part` to fetch different details. Change credentials for another YouTube account.",
+        "height": 420,
+        "width": 260,
+        "color": 5
+      },
+      "id": "f385da0a-f505-4f5a-b3a2-90a3b2e23975",
+      "name": "YouTube Playlist Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        48,
+        80
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "🔗 **titles/URL (Function Node)**\n\nExtracts video URLs and titles from the playlist data and assigns a row ID.\n",
+        "height": 420,
+        "width": 260,
+        "color": 5
+      },
+      "id": "3727aaa5-04b3-4d14-8d50-659910ad99bc",
+      "name": "titles/URL Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        352,
+        80
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "yt_source",
+          "mode": "list",
+          "cachedResultName": "yt_source"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "title": "={{ $('Loop Over Items1').item.json.title }}",
+            "summary": "={{ $json.content.parts[0].text }}",
+            "channel": "Transcript",
+            "yt_id": "={{ $('Loop Over Items1').item.json.videoId }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "channel",
+              "displayName": "channel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "yt_id",
+              "displayName": "yt_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1808,
+        448
+      ],
+      "id": "ead84bc6-c2eb-48ec-8493-80b043380175",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3-pro-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3-pro-preview"
+        },
+        "text": "Summarize the following video. The summary must be clear, well-organized, and comprehensive.\nInclude all important information, data, and key points from the script.\nDivide the summary into sections according to the main topics, ideas, or parts discussed in the video.\nFor each section, list all main points, facts, examples, and arguments mentioned.\nDo not omit any significant information or insight.\nThe summary should be detailed enough to give a full understanding of the video, but avoid unnecessary repetition or filler.\nUse headings and bullet points for clarity.\nThe result should be useful for someone who has not watched or listened video, but wants to understand all its important content and insights. ",
+        "videoUrls": "={{ $('Loop Over Items1').item.json.url }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        448
+      ],
+      "id": "d0047fe2-ce55-4321-a22c-8e3ead2474dc",
+      "name": "Analyze video",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "kkIhUrwdvG9t0lHh",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6daf3a74-d6a3-46c5-830d-1e9fd0d26fd0",
+              "leftValue": "={{ $json.count }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1408,
+        192
+      ],
+      "id": "f3df62e2-89b9-49e5-8d9f-8f7da0c2ef74",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT count(*) from yt_source where yt_id = '{{ $json.videoId }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1200,
+        336
+      ],
+      "id": "7a281482-d817-442e-a4bb-4b523cb6746a",
+      "name": "Execute a SQL query",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "pYoJaloY0AF84pHn",
+          "name": "stribog_localhost"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "titles/URL": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube Playlist": {
+      "main": [
+        [
+          {
+            "node": "titles/URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "YouTube Playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert rows in a table": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze video": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Analyze video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f8ebd3b6-2951-4d51-843f-e442e31ab8f9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8356fa659808c23f4e75b06da8577f2a44876741dbd41bb19d8e4018cbb11761"
+  },
+  "id": "XcBtkNRIJkm6qDpj",
+  "tags": [
+    {
+      "name": "livenature",
+      "id": "uolhYXGmlWrVbGcV",
+      "updatedAt": "2025-12-08T14:20:00.994Z",
+      "createdAt": "2025-12-08T14:20:00.994Z"
+    }
+  ]
+}

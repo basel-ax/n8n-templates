@@ -4,6 +4,7 @@ This repository contains a collection of n8n workflows for various automation ta
 
 ## Usable link & repos  
 [seo-n8n-templates](https://github.com/pathavyer/seo-n8n-templates)  
+[AI Agents A-Z](https://github.com/gyoridavid/ai_agents_az)  
 
 ## Table of Contents
 
